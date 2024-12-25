@@ -1,18 +1,15 @@
 import React from 'react';
 import { Input, Space } from 'antd';
-const { Search } = Input;
-const onSearch = (value, _e, info) => console.log(info?.source, value);
+import {TextSearch} from '../../Generral/Button'
 const INPUT = () => (
-  <Space direction="vertical">
-    <Search
-      placeholder="input search text"
-      allowClear
-      enterButton="Tìm kiếm"
-      size="large"
-      onSearch={onSearch}
-    />
-    
-  </Space>
+  <Space.Compact
+      style={{
+        width: '100%',
+      }}
+    >
+      <Input defaultValue="" placeholder='Tìm kiếm sản phẩm' />
+      <TextSearch type="primary"/>
+    </Space.Compact>
   );
-  export default INPUT;
+  export {INPUT};
 

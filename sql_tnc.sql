@@ -151,61 +151,81 @@ CREATE TABLE bill_details (
 
 DELIMITER //
 
-CREATE PROCEDURE GenerateProductCode()
+CREATE PROCEDURE AddProductWithCode(
+    IN product_name VARCHAR(255),
+    IN product_description TEXT,
+    IN product_price BIGINT,
+    IN product_quantity INT,
+    IN product_category_id INT,
+    IN product_brand_id INT,
+    IN product_image VARCHAR(255)
+)
 BEGIN
-    -- Khai báo tất cả các biến ở đầu
     DECLARE prefix_category VARCHAR(10);
     DECLARE prefix_brand VARCHAR(10);
     DECLARE new_code VARCHAR(50);
-    DECLARE product_id INT;
-    DECLARE category_id INT;
-    DECLARE brand_id INT;
-    DECLARE done INT DEFAULT 0;
 
-    -- Tạo CURSOR để duyệt từng sản phẩm chưa có mã
-    DECLARE cur CURSOR FOR 
-        SELECT id, category_id, brand_id 
-        FROM products 
-        WHERE code IS NULL;
+    -- Lấy prefix của category
+    SELECT LEFT(name, 3)
+    INTO prefix_category
+    FROM categories
+    WHERE id = product_category_id;
 
-    -- Xử lý kết thúc CURSOR
-    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+    -- Lấy prefix của brand
+    SELECT LEFT(name, 3)
+    INTO prefix_brand
+    FROM brands
+    WHERE id = product_brand_id;
 
-    -- Mở CURSOR
-    OPEN cur;
+    -- Tạo mã sản phẩm dạng PREFIX_CATEGORY-PREFIX_BRAND-ID
+    INSERT INTO products (name,description, price, quantity, category_id, brand_id, image_url)
+    VALUES (product_name,product_description, product_price, product_quantity, product_category_id, product_brand_id,product_image);
 
-    read_loop: LOOP
-        FETCH cur INTO product_id, category_id, brand_id;
-        IF done THEN 
-            LEAVE read_loop;
-        END IF;
+    SET new_code = CONCAT(UCASE(prefix_category), '-', UCASE(prefix_brand), '-', LPAD(LAST_INSERT_ID(), 3, '0'));
 
-        -- Lấy prefix của category
-        SELECT LEFT(name, 3) 
-        INTO prefix_category
-        FROM categories 
-        WHERE id = category_id;
-
-        -- Lấy prefix của brand
-        SELECT LEFT(name, 3) 
-        INTO prefix_brand
-        FROM brands 
-        WHERE id = brand_id;
-
-        -- Tạo mã sản phẩm dạng PREFIX_CATEGORY-PREFIX_BRAND-ID
-        SET new_code = CONCAT(UCASE(prefix_category), '-', UCASE(prefix_brand), '-', LPAD(product_id, 3, '0'));
-
-        -- Cập nhật mã vào sản phẩm
-        UPDATE products 
-        SET code = new_code
-        WHERE id = product_id;
-    END LOOP;
-
-    -- Đóng CURSOR
-    CLOSE cur;
+    -- Cập nhật mã sản phẩm
+    UPDATE products
+    SET code = new_code
+    WHERE id = LAST_INSERT_ID();
 END //
 
 DELIMITER ;
 
+-- DML --
+use TNC;
+-- brand --
+insert into brands (`name`) values("Dell");
+insert into brands (`name`) values("Asus");
+insert into brands (`name`) values("Lenovo");
+insert into brands (`name`) values("Gigabyte");
+insert into brands (`name`) values("Macbook");
 
+-- categories --
+insert into categories (`name`) values("Laptop Văn Phòng");
+insert into categories (`name`) values("Laptop Gaming");
+insert into categories (`name`) values("PC Văn Phòng");
+insert into categories (`name`) values("PC Gaming");
+insert into categories (`name`) values("PC Workstation");
+
+-- products --
+
+CALL AddProductWithCode(
+    'Laptop Dell XPS', 
+    'Máy tính xách tay hiệu suất cao', 
+    25000000, 
+    10, 
+    6, 
+    1, 
+    'dell_xps_image.png'
+);
+
+CALL AddProductWithCode(
+    'Laptop Asus TUF F15', 
+    'Máy tính xách tay GAMING hiệu suất cao', 
+    30000000, 
+    10, 
+    7, 
+    2, 
+    'Asus_tuf.png'
+);
 

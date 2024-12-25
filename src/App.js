@@ -1,12 +1,17 @@
-import './App.css';
-import Main from './component/Layout/Main';
-// import _container from './component/Asset/css/_container.module.css'
+import { Routes, Route } from 'react-router-dom';
+import { routes } from './component/Router/routes';
 
 function App() {
   return (
-    <div>
-      <Main/>
-    </div>
+    <>
+      <Routes>
+      {routes.map((item, index) => {
+          const Page = item.component;
+          const Layout =  item.layout;
+          return <Route key={index} path={item.path} element={<Layout><Page/></Layout>}/>
+         })}
+      </Routes>
+    </>
   );
 }
 

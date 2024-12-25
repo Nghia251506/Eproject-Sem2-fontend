@@ -9,6 +9,9 @@
     "@fortawesome/free-solid-svg-icons": "^6.7.1",
     "@fortawesome/react-fontawesome": "^0.2.2",
     "antd": "^5.22.5",
+    "axios": "^1.7.9",
+    "bootstrap": "^5.3.3",
+    "clsx": "^2.1.1",
     "cra-template": "1.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -38,8 +41,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "typescript": "^5.7.2"
   }
 }
