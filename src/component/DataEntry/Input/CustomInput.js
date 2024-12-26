@@ -13,3 +13,5 @@ const CustomInput = (props) => {
         </div>
     );
 }
+
+export default CustomInput;

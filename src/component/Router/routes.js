@@ -2,14 +2,28 @@ import LayoutClient from '../Layout/Main'
 import Home from '../Pages/Home'
 // import Introduce from '../Pages/Introduce'
 import LayoutAdmin from '../Layout/Admin.layout'
+import Login from '../Pages/Login/Login'
+import Dashboard from '../Pages/Dashboard'
+import AddProduct from '../Pages/Product/AddProduct'
+import ListProduct from '../Pages/Product/ListProduct'
 
 const routes = [
-    {path:"/", component: Home, layout: LayoutClient},
-    // {path:"/Introduce",component: Introduce, layout: LayoutClient},
-    // {path:"/Notification",component: Introduce, layout: LayoutClient},
-    // {path:"/Service",component: Introduce, layout: LayoutClient},
-    // {path:"/Contact",component: Introduce, layout: LayoutClient},
-    {path:"/admin", layout: LayoutAdmin},
-]
-
-export {routes}
+    { path: "/login", layout: Login },
+    { 
+        path: "/", 
+        layout: LayoutClient,
+        children: [
+            {path:"", component: Home}
+        ],
+    },
+    {
+        path: "/admin",
+        layout: LayoutAdmin,
+        children: [
+            {path:"",component: Dashboard},
+            { path: "add-product", component: AddProduct},
+            { path: "list-product", component: ListProduct},
+        ],
+    },
+];
+export { routes };

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import _admin from '../Asset/css/_navigation.module.css'
-import _icon from '../Asset/css/_icon.module.css'
-import {useNavigate} from 'react-router-dom'
+// import _icon from '../Asset/css/_icon.module.css'
+import {Outlet, useNavigate} from 'react-router-dom'
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -11,9 +11,17 @@ import {
 } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faUsers} from '@fortawesome/free-solid-svg-icons'
+import { AiFillDashboard, AiFillProduct } from "react-icons/ai";
+import { FaListAlt, FaToggleOff, FaToggleOn, FaRegMoneyBillAlt } from "react-icons/fa";
+import { IoMdAddCircle } from "react-icons/io";
+import { SiBrandfolder } from "react-icons/si";
+import { BiCategoryAlt } from "react-icons/bi";
+import { MdOutlineFavoriteBorder } from "react-icons/md";
+import { RiBillFill } from "react-icons/ri";
+import { FaMoneyBillTransfer } from "react-icons/fa6";
 import { Button, Layout, Menu, theme } from 'antd';
 const { Header, Sider, Content } = Layout;
-const Admin = () => {
+const Admin = ({children}) => {
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -28,7 +36,7 @@ const Admin = () => {
           mode="inline"
           defaultSelectedKeys={[""]}
           onClick={({ key }) => {
-            if (key == "signout") {
+            if (key === "signout") {
             } else {
               navigate(key);
             }
@@ -37,55 +45,84 @@ const Admin = () => {
           items={[
             {
               key: '',
-              icon: <UserOutlined />,
+              icon: <AiFillDashboard className="fs-4"/>,
+              label: 'Dashboard',
+            },
+            {
+              key: '',
+              icon: <UserOutlined className="fs-4"/>,
               label: 'User',
               children:[
                 {
                   key: "customers",
-                  icon: <FontAwesomeIcon icon={faUsers}/>,
+                  icon: <FontAwesomeIcon icon={faUsers} className="fs-4"/>,
                   label: 'Custommer',
                 },
                 {
                   key: "employees",
-                  icon: <UserOutlined />,
+                  icon: <UserOutlined className="fs-4"/>,
                   label: 'Employee',
                 },
                 
               ]
             },
+            
             {
-              key: '2',
-              icon: <VideoCameraOutlined />,
-              label: 'nav 2',
-            },
-            {
-              key: '3',
-              icon: <UploadOutlined />,
-              label: 'nav 3',
+              key: 'catalog',
+              icon: <FaListAlt className="fs-4"/>,
+              label: 'Products',
               children:[
                 {
-                  key: '31',
-                  label: 'sub nav 1',
+                  key: 'list-product',
+                  icon: <AiFillProduct className="fs-4"/>,
+                  label: 'List product',
                 },
                 {
-                  key: '32',
-                  label: 'sub nav 2',
+                  key: 'add-product',
+                  icon: <IoMdAddCircle className="fs-4"/>,
+                  label: 'Add Product',
                 },
                 {
-                  key: '33',
-                  label: 'sub nav 3',
+                  key: "brand",
+                  icon: <SiBrandfolder className="fs-4" />,
+                  label: "Thương hiệu",
                 },
                 {
-                  key: '34',
-                  label: 'sub nav 4',
+                  key: "list-brand",
+                  icon: <SiBrandfolder className="fs-4" />,
+                  label: "Danh sách thương hiệu ",
                 },
                 {
-                  key: '35',
-                  label: 'sub nav 5',
+                  key: "category",
+                  icon: <BiCategoryAlt className="fs-4" />,
+                  label: "Loại sản phẩm",
                 },
                 {
-                  key: '36',
-                  label: 'sub nav 6',
+                  key: "list-category",
+                  icon: <BiCategoryAlt className="fs-4" />,
+                  label: "Danh sách loại sản phẩm",
+                },
+              ]
+            },
+            {
+              key: 'order',
+              icon: <MdOutlineFavoriteBorder className="fs-4"/>,
+              label: 'Order',
+            },
+            {
+              key: 'bill',
+              icon: <FaMoneyBillTransfer className="fs-4"/>,
+              label: 'Bill',
+              children:[
+                {
+                    key:'list-bill',
+                    icon: <RiBillFill className="fs-4"/>,
+                    label:'List Bill',
+                },
+                {
+                    key:'bill',
+                    icon:<FaRegMoneyBillAlt className="fs-4"/>,
+                    label:'Bill',
                 },
               ]
             },
@@ -101,7 +138,7 @@ const Admin = () => {
         >
           <Button
             type="text"
-            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+            icon={collapsed ? <FaToggleOff /> : <FaToggleOn />}
             onClick={() => setCollapsed(!collapsed)}
             style={{
               fontSize: '16px',
@@ -119,7 +156,7 @@ const Admin = () => {
             borderRadius: borderRadiusLG,
           }}
         >
-          Content
+          {children || <Outlet />}
         </Content>
       </Layout>
     </Layout>
