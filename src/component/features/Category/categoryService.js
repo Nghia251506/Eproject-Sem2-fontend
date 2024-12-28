@@ -15,7 +15,7 @@ const createCategory = async (categoryData) => {
 };
 
 // Lấy thông tin chi tiết của một sản phẩm
-const getCategory = async (id) => {
+const getCategoryById = async (id) => {
   const response = await axios.get(`${API_URL}/detail/${id}`);
   return response.data; // Trả về chi tiết sản phẩm
 };
@@ -36,7 +36,7 @@ const updateCategory = async (categoryData) => {
 const categoryService = {
   getCategories,
   createCategory,
-  getCategory,
+  getCategoryById,
   deleteCategory,
   updateCategory,
 };
