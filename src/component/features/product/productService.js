@@ -5,6 +5,7 @@ const API_URL = "http://localhost:4000/api"; // Thay đổi URL nếu backend c�
 // Lấy danh sách sản phẩm
 const getProducts = async () => {
   const response = await axios.get(`${API_URL}/list-product`);
+  console.log(response);
   return response.data; // Trả về dữ liệu JSON từ backend
 };
 

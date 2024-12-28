@@ -70,7 +70,7 @@ const Admin = ({children}) => {
             {
               key: 'catalog',
               icon: <FaListAlt className="fs-4"/>,
-              label: 'Products',
+              label: 'Overview',
               children:[
                 {
                   key: 'list-product',
@@ -83,7 +83,7 @@ const Admin = ({children}) => {
                   label: 'Add Product',
                 },
                 {
-                  key: "brand",
+                  key: "add-brand",
                   icon: <SiBrandfolder className="fs-4" />,
                   label: "Thương hiệu",
                 },
@@ -93,7 +93,7 @@ const Admin = ({children}) => {
                   label: "Danh sách thương hiệu ",
                 },
                 {
-                  key: "category",
+                  key: "add-category",
                   icon: <BiCategoryAlt className="fs-4" />,
                   label: "Loại sản phẩm",
                 },

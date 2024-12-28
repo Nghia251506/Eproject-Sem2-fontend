@@ -5,6 +5,7 @@ const API_URL = "http://localhost:4000/api"; // Thay đổi URL nếu backend c�
 // Lấy danh sách sản phẩm
 const getCategories = async () => {
   const response = await axios.get(`${API_URL}/list-category`);
+  // console.log(response); 
   return response.data; // Trả về dữ liệu JSON từ backend
 };
 
@@ -22,7 +23,7 @@ const getCategoryById = async (id) => {
 
 // Xóa sản phẩm theo ID
 const deleteCategory = async (id) => {
-  const response = await axios.delete(`${API_URL}/delete/${id}`);
+  const response = await axios.delete(`${API_URL}/delete-category/${id}`);
   return response.data; // Trả về thông báo hoặc kết quả xóa
 };
 

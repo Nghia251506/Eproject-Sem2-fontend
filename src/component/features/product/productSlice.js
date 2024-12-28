@@ -1,9 +1,19 @@
 import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
 import productService from "./productService";
 
+// Khởi tạo trạng thái ban đầu
+const initialState = {
+  products: [], // Danh sách sản phẩm
+  product: null, // Chi tiết sản phẩm
+  isLoading: false, // Trạng thái đang tải
+  isError: false, // Có lỗi xảy ra
+  isSuccess: false, // Hành động thành công
+  message: "", // Thông báo lỗi hoặc thành công
+};
+
 // Thunk để lấy danh sách sản phẩm
 export const getProducts = createAsyncThunk(
-  "product/list-product",
+  "api/list-product",
   async (_, thunkAPI) => {
     try {
       return await productService.getProducts();
@@ -64,17 +74,7 @@ export const updateAProduct = createAsyncThunk(
 // Action để reset trạng thái
 export const resetState = createAction("product/reset-state");
 
-// Khởi tạo trạng thái ban đầu
-const initialState = {
-  products: [], // Danh sách sản phẩm
-  product: null, // Chi tiết sản phẩm
-  isLoading: false, // Trạng thái đang tải
-  isError: false, // Có lỗi xảy ra
-  isSuccess: false, // Hành động thành công
-  message: "", // Thông báo lỗi hoặc thành công
-};
-
-const productSlice = createSlice({
+export const productSlice = createSlice({
   name: "product",
   initialState,
   reducers: {},

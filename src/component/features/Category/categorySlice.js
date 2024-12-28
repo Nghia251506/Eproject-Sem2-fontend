@@ -1,12 +1,24 @@
 import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
 import categoryService from "./categoryService";
 
+// Khởi tạo trạng thái ban đầu
+const initialState = {
+  categories: [], // Danh sách loại sản phẩm
+  category: null, // Chi tiết sản phẩm
+  isLoading: false, // Trạng thái đang tải
+  isError: false, // Có lỗi xảy ra
+  isSuccess: false, // Hành động thành công
+  message: "", // Thông báo lỗi hoặc thành công
+};
+
 // Thunk để lấy danh sách sản phẩm
 export const getCategories = createAsyncThunk(
-  "category/list",
-  async (_, thunkAPI) => {
+  "category/list-category",
+  async (_,thunkAPI) => {
     try {
-      return await categoryService.getCategories();
+      const data = await categoryService.getCategories();
+      console.log(data);
+      return data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
     }
@@ -15,7 +27,7 @@ export const getCategories = createAsyncThunk(
 
 // Thunk để thêm sản phẩm mới
 export const createCategory = createAsyncThunk(
-  "category/add",
+  "category/add-category",
   async (categoryData, thunkAPI) => {
     try {
       return await categoryService.createCategory(categoryData);
@@ -62,19 +74,9 @@ export const updateACategory = createAsyncThunk(
 );
 
 // Action để reset trạng thái
-export const resetState = createAction("product/reset-state");
+export const resetState = createAction("RevertAll");
 
-// Khởi tạo trạng thái ban đầu
-const initialState = {
-  categories: [], // Danh sách sản phẩm
-  category: null, // Chi tiết sản phẩm
-  isLoading: false, // Trạng thái đang tải
-  isError: false, // Có lỗi xảy ra
-  isSuccess: false, // Hành động thành công
-  message: "", // Thông báo lỗi hoặc thành công
-};
-
-const categorySlice = createSlice({
+export const categorySlice = createSlice({
   name: "category",
   initialState,
   reducers: {},
@@ -85,10 +87,11 @@ const categorySlice = createSlice({
         state.isLoading = true;
       })
       .addCase(getCategories.fulfilled, (state, action) => {
+        // console.log(action.payload);
         state.isLoading = false;
         state.isError = false;
         state.isSuccess = true;
-        state.categories = action.payload;
+        state.categories = action.payload.data;
       })
       .addCase(getCategories.rejected, (state, action) => {
         state.isLoading = false;
@@ -158,8 +161,8 @@ const categorySlice = createSlice({
         state.isLoading = false;
         state.isError = false;
         state.isSuccess = true;
-        state.categories = state.categories.map((product) =>
-          product.id === action.payload.id ? action.payload : product
+        state.categories = state.categories.map((category) =>
+          category.id === action.payload.id ? action.payload : category
         );
       })
       .addCase(updateACategory.rejected, (state, action) => {

@@ -15,13 +15,15 @@ CREATE TABLE users (
 
 CREATE TABLE categories (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(50) UNIQUE NOT NULL,
+    category_name VARCHAR(50) UNIQUE NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+
+
 CREATE TABLE brands (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(50) UNIQUE NOT NULL,
+    brand_name VARCHAR(50) UNIQUE NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -191,21 +193,23 @@ END //
 
 DELIMITER ;
 
+
+
 -- DML --
 use TNC;
 -- brand --
-insert into brands (`name`) values("Dell");
-insert into brands (`name`) values("Asus");
-insert into brands (`name`) values("Lenovo");
-insert into brands (`name`) values("Gigabyte");
-insert into brands (`name`) values("Macbook");
+insert into brands (`brand_name`) values("Dell");
+insert into brands (`brand_name`) values("Asus");
+insert into brands (`brand_name`) values("Lenovo");
+insert into brands (`brand_name`) values("Gigabyte");
+insert into brands (`brand_name`) values("Macbook");
 
 -- categories --
-insert into categories (`name`) values("Laptop Văn Phòng");
-insert into categories (`name`) values("Laptop Gaming");
-insert into categories (`name`) values("PC Văn Phòng");
-insert into categories (`name`) values("PC Gaming");
-insert into categories (`name`) values("PC Workstation");
+insert into categories (`category_name`) values("Laptop Văn Phòng");
+insert into categories (`category_name`) values("Laptop Gaming");
+insert into categories (`category_name`) values("PC Văn Phòng");
+insert into categories (`category_name`) values("PC Gaming");
+insert into categories (`category_name`) values("PC Workstation");
 
 -- products --
 
@@ -228,4 +232,5 @@ CALL AddProductWithCode(
     2, 
     'Asus_tuf.png'
 );
+
 

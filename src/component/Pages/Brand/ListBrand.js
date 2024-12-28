@@ -18,8 +18,8 @@ const columns = [
   },
   {
     title: "Tên",
-    dataIndex: "name",
-    sorter: (a, b) => a.name.length - b.name.length,
+    dataIndex: "brand_name",
+    sorter: (a, b) => a.brand_name.length - b.brand_name.length,
   },
   {
     title: "Hành động",
@@ -44,11 +44,12 @@ const Brandlist = () => {
     dispatch(getBrands());
   }, []);
   const brandState = useSelector((state) => state.brand.brands);
+//   console.log(brandState);
   const data1 = [];
   for (let i = 0; i < brandState.length; i++) {
     data1.push({
       key: i + 1,
-      name: brandState[i].title,
+      name: brandState[i].brand_name,
       action: (
         <>
           <Link

@@ -6,7 +6,8 @@ import Login from '../Pages/Login/Login'
 import Dashboard from '../Pages/Dashboard'
 import AddProduct from '../Pages/Product/AddProduct'
 import ListProduct from '../Pages/Product/ListProduct'
-import ListBrand from '../Pages/Brand/ListBrand'
+import BrandList from '../Pages/Brand/ListBrand'
+import CategoryList from "../Pages/Category/ListCategory"
 
 const routes = [
     { path: "/login", layout: Login },
@@ -24,7 +25,8 @@ const routes = [
             {path:"",component: Dashboard},
             { path: "add-product", component: AddProduct},
             { path: "list-product", component: ListProduct},
-            { path: "list-brand", component: ListBrand},
+            { path: "list-brand", component: BrandList},
+            { path: "list-category", component: CategoryList},
         ],
     },
 ];

@@ -33,6 +33,10 @@ const columns = [
     sorter: (a, b) => a.category.localeCompare(b.category),
   },
   {
+    title: "Tồn kho",
+    dataIndex: "quantity",
+  },
+  {
     title: "Giá (VND)",
     dataIndex: "price",
     sorter: (a, b) => a.price - b.price,
@@ -69,8 +73,9 @@ const ListProduct = () => {
     key: index + 1,
     code: product.code,
     name: product.name,
-    brand: product.brand_id?.name || "Không xác định", // Lấy tên thương hiệu
-    category: product.category_id?.name || "Không xác định", // Lấy tên loại sản phẩm
+    brand: product.brand_name, // Lấy tên thương hiệu
+    category: product.category_name || "Không xác định", // Lấy tên loại sản phẩm
+    quantity: product.quantity,
     price: product.price,
     action: (
       <>
