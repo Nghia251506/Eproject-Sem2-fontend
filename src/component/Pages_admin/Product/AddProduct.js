@@ -1,14 +1,15 @@
 import { React, useEffect, useState } from "react";
 import CustomInput from "../../DataEntry/Input/CustomInput";
-import ReactQuill from "quill"
+import ReactQuill from "react-quill"
 import { useLocation, useNavigate } from "react-router-dom";
-import 'quill/dist/quill.snow.css';
+import 'react-quill/dist/quill.snow.css';
 import { toast } from "react-toastify";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { getBrands } from "../../features/Band/brandSlice";
-import { getCategories } from "../../features/Category/categorySlice";
+import { ListCategories } from "../../features/Category/categorySlice";
+import _input from '../../Asset/css/_input.module.css'
 // import { Select } from "antd";
 // import Dropzone from "react-dropzone";
 import { createProduct, resetState, getAProduct, updateAProduct } from "../../features/product/productSlice";
@@ -49,8 +50,8 @@ const Addproduct = () => {
 
   useEffect(() => {
     dispatch(getBrands());
-    dispatch(getCategories());
-  }, []);
+    dispatch(ListCategories());
+  }, [dispatch]);
 
   useEffect(() => {
     if (getProductId !== undefined) {
@@ -80,8 +81,8 @@ const Addproduct = () => {
       description: productDescription || "",
       price: productPrice || "",
       quantity: productQuantity || "",
-      category_id: productCategory || "",
-      brand_id: productBrand || "",
+      category_name: productCategory || "",
+      brand_name: productBrand || "",
       image_url: productImage || "",
     },
     validationSchema: schema,
@@ -107,60 +108,64 @@ const Addproduct = () => {
         {getProductId !== undefined ? "Cập nhật" : "Thêm"} sản phẩm
       </h3>
       <form onSubmit={formik.handleSubmit} className="d-flex gap-3 flex-column">
+      <span>Tên sản phẩm</span>
         <CustomInput
           type="text"
-          label="Nhập tên sản phẩm"
+          placeholder="Nhập tên sản phẩm"
           name="name"
-          onChng={formik.handleChange("name")}
-          onBlr={formik.handleBlur("name")}
-          val={formik.values.name}
+          onChg={formik.handleChange("name")}
+          onBlur={formik.handleBlur("name")}
+          values={formik.values.name}
+          className="form-control py-3 mb-3"
         />
-        <div className="error">{formik.touched.name && formik.errors.name}</div>
+        <div className={_input.error}>{formik.touched.name && formik.errors.name}</div>
         <ReactQuill
           theme="snow"
           name="description"
           onChange={formik.handleChange("description")}
-          value={formik.values.description}
+          values={formik.values.description}
+          className="form-control py-3 mb-3"
         />
-        <div className="error">
+        <div className={_input.error}>
           {formik.touched.description && formik.errors.description}
         </div>
         <CustomInput
           type="number"
-          label="Nhập giá sản phẩm"
+          placeholder="Nhập giá sản phẩm"
           name="price"
-          onChng={formik.handleChange("price")}
-          onBlr={formik.handleBlur("price")}
-          val={formik.values.price}
+          onChg={formik.handleChange("price")}
+          onBlur={formik.handleBlur("price")}
+          values={formik.values.price}
+          className="form-control py-3 mb-3"
         />
-        <div className="error">{formik.touched.price && formik.errors.price}</div>
+        <div className={_input.error}>{formik.touched.price && formik.errors.price}</div>
         <CustomInput
           type="number"
-          label="Nhập số lượng sản phẩm"
+          placeholder="Nhập số lượng sản phẩm"
           name="quantity"
           onChng={formik.handleChange("quantity")}
           onBlr={formik.handleBlur("quantity")}
-          val={formik.values.quantity}
+          values={formik.values.quantity}
         />
-        <div className="error">
+        <div className={_input.error}>
           {formik.touched.quantity && formik.errors.quantity}
         </div>
         <select
-          name="category_id"
-          onChange={formik.handleChange("category_id")}
-          onBlur={formik.handleBlur("category_id")}
-          value={formik.values.category_id}
+          name="category_name"
+          onChange={formik.handleChange("category_name")}
+          onBlur={formik.handleBlur("category_name")}
+          value={formik.values.category_name}
           className="form-control py-3 mb-3"
         >
           <option value="">Chọn loại sản phẩm</option>
           {catState.map((i) => (
             <option key={i.id} value={i.id}>
-              {i.name}
+              {i.category_name}
             </option>
           ))}
         </select>
-        <div className="error">
-          {formik.touched.category_id && formik.errors.category_id}
+        <div className={_input.error}>
+          {formik.touched.category_name && formik.errors.category_name}
         </div>
         <select
           name="brand_id"
@@ -172,20 +177,21 @@ const Addproduct = () => {
           <option value="">Chọn thương hiệu</option>
           {brandState.map((i) => (
             <option key={i.id} value={i.id}>
-              {i.name}
+              {i.brand_name}
             </option>
           ))}
         </select>
         <div className="error">
-          {formik.touched.brand_id && formik.errors.brand_id}
+          {formik.touched.brand_name && formik.errors.brand_name}
         </div>
         <CustomInput
           type="text"
-          label="URL hình ảnh"
+          placeholder="URL hình ảnh"
           name="image_url"
           onChng={formik.handleChange("image_url")}
           onBlr={formik.handleBlur("image_url")}
           val={formik.values.image_url}
+          className="form-control py-3 mb-3"
         />
         <div className="error">
           {formik.touched.image_url && formik.errors.image_url}

@@ -42,14 +42,14 @@ const Brandlist = () => {
   useEffect(() => {
     dispatch(resetState());
     dispatch(getBrands());
-  }, []);
+  }, [dispatch]);
   const brandState = useSelector((state) => state.brand.brands);
-//   console.log(brandState);
+  // console.log(brandState);
   const data1 = [];
   for (let i = 0; i < brandState.length; i++) {
     data1.push({
       key: i + 1,
-      name: brandState[i].brand_name,
+      brand_name: brandState[i].brand_name,
       action: (
         <>
           <Link

@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   deleteACategory,
-  getCategories,
+  ListCategories,
   resetState,
 } from "../../features/Category/categorySlice";
 import CustomModal from "../../DataEntry/Modal/CustomModal";
@@ -30,7 +30,7 @@ const columns = [
 const Categorylist = () => {
   const [open, setOpen] = useState(false);
   const [categoryId, setcategoryId] = useState("");
-  const categoryState = useSelector((state) => state.category || {});
+  // const categoryState = useSelector((state) => state.category.categories) || [];
 
   const showModal = (id) => {
     setOpen(true);
@@ -43,12 +43,10 @@ const Categorylist = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(resetState());
-    dispatch(getCategories());
+    dispatch(ListCategories());
   }, [dispatch]);
-  console.log("-----");
-  const categories = categoryState.categories || [];
-  console.log(categories);
-  // console.log('Category State:', categoryState.Categories); // Kiểm tra giá trị
+  const categoryState = useSelector((state) => state.category.categories);
+  console.log(categoryState);
   const data1 = [];
   // categoryState.map((category, index) =>({
   //   key: index + 1,
@@ -70,21 +68,22 @@ const Categorylist = () => {
   //     </>
   //   ),
   // }));
-  for (let i = 0; i < categories.length; i++) {
+
+  for (let i = 0; i < categoryState.length; i++) {
     data1.push({
       key: i + 1,
-      name: categories[i].category_name,
+      category_name: categoryState[i].category_name,
       action: (
         <>
           <Link
-            to={`/admin/brand/${categories[i]._id}`}
+            to={`/admin/brand/${categoryState[i]._id}`}
             className=" fs-3 text-danger"
           >
             <BiEdit />
           </Link>
           <button
             className="ms-3 fs-3 text-danger bg-transparent border-0"
-            onClick={() => showModal(categories[i]._id)}
+            onClick={() => showModal(categoryState[i]._id)}
           >
             <AiFillDelete />
           </button>
@@ -97,7 +96,7 @@ const Categorylist = () => {
 
     setOpen(false);
     setTimeout(() => {
-      dispatch(getCategories());
+      dispatch(ListCategories());
     }, 100);
   };
   return (

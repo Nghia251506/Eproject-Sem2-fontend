@@ -11,3 +11,13 @@
     display:flex;
     justify-content: space-between;
 }
+
+.homeBanner{
+    display:flex;
+    /* position:relative; */
+}
+
+.homeBanner_1{
+    width: 50%;
+    height: 365px;
+}

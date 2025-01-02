@@ -5,6 +5,8 @@ import _home from '../Asset/css/_home.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStore, faPhone } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
+import {BannerSlice} from '../DataDisplay/Banner/BannerSlide' 
+import Banner from '../Asset/image/Banner1.JPG'
 function Home (){
     return(
         <>
@@ -30,7 +32,17 @@ function Home (){
                         </div>
                     </div>
                 </div>
-                 
+                 <div className={_home.homeBanner}>
+                    <div className={_home.homeBanner_1}>
+                        <BannerSlice/>
+                    </div>
+                    <div className={_home.homeBanner_1}>
+                        <div>
+                            {/* <img src={Banner} alt="Banner"/> */}
+                        </div>
+                        <div>bcd</div>
+                    </div>
+                 </div>
             </div>
         </>
     );

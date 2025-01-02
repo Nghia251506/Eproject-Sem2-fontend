@@ -2,23 +2,16 @@ import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
 import categoryService from "./categoryService";
 
 // Khởi tạo trạng thái ban đầu
-const initialState = {
-  categories: [], // Danh sách loại sản phẩm
-  category: null, // Chi tiết sản phẩm
-  isLoading: false, // Trạng thái đang tải
-  isError: false, // Có lỗi xảy ra
-  isSuccess: false, // Hành động thành công
-  message: "", // Thông báo lỗi hoặc thành công
-};
+
 
 // Thunk để lấy danh sách sản phẩm
-export const getCategories = createAsyncThunk(
+export const ListCategories = createAsyncThunk(
   "category/list-category",
   async (_,thunkAPI) => {
     try {
-      const data = await categoryService.getCategories();
-      console.log(data);
-      return data;
+      const response = await categoryService.ListCategories();
+      // console.log(data);
+      return response;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
     }
@@ -75,6 +68,14 @@ export const updateACategory = createAsyncThunk(
 
 // Action để reset trạng thái
 export const resetState = createAction("RevertAll");
+const initialState = {
+  categories: [], // Danh sách loại sản phẩm
+  category: null, // Chi tiết sản phẩm
+  isLoading: false, // Trạng thái đang tải
+  isError: false, // Có lỗi xảy ra
+  isSuccess: false, // Hành động thành công
+  message: "", // Thông báo lỗi hoặc thành công
+};
 
 export const categorySlice = createSlice({
   name: "category",
@@ -83,17 +84,17 @@ export const categorySlice = createSlice({
   extraReducers: (builder) => {
     builder
       // Xử lý getProducts
-      .addCase(getCategories.pending, (state) => {
+      .addCase(ListCategories.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getCategories.fulfilled, (state, action) => {
+      .addCase(ListCategories.fulfilled, (state, action) => {
         // console.log(action.payload);
         state.isLoading = false;
         state.isError = false;
         state.isSuccess = true;
-        state.categories = action.payload.data;
+        state.categories = action.payload;
       })
-      .addCase(getCategories.rejected, (state, action) => {
+      .addCase(ListCategories.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;

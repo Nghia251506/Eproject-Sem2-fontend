@@ -6,7 +6,8 @@ export const getBrands = createAsyncThunk(
   "brand/list-brand",
   async (thunkAPI) => {
     try {
-      return await brandService.getBrands();
+      const data = await brandService.getBrands();
+      return data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
     }
@@ -62,7 +63,7 @@ export const updateABrand = createAsyncThunk(
 );
 
 // Action để reset trạng thái
-export const resetState = createAction("brand/reset-state");
+export const resetState = createAction("RevertAll");
 
 // Khởi tạo trạng thái ban đầu
 const initialState = {

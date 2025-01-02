@@ -49,7 +49,7 @@ export const getAProduct = createAsyncThunk(
 
 // Thunk để xóa sản phẩm
 export const deleteAProduct = createAsyncThunk(
-  "product/delete",
+  "api/delete",
   async (id, thunkAPI) => {
     try {
       return await productService.deleteProduct(id);

@@ -3,7 +3,7 @@ import axios from "axios";
 const API_URL = "http://localhost:4000/api"; // Thay đổi URL nếu backend của bạn dùng địa chỉ khác
 
 // Lấy danh sách sản phẩm
-const getCategories = async () => {
+const ListCategories = async () => {
   const response = await axios.get(`${API_URL}/list-category`);
   // console.log(response); 
   return response.data; // Trả về dữ liệu JSON từ backend
@@ -35,7 +35,7 @@ const updateCategory = async (categoryData) => {
 
 // Export tất cả các phương thức
 const categoryService = {
-  getCategories,
+  ListCategories,
   createCategory,
   getCategoryById,
   deleteCategory,

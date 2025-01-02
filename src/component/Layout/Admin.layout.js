@@ -1,14 +1,7 @@
 import React, { useState } from 'react';
 import _admin from '../Asset/css/_navigation.module.css'
-// import _icon from '../Asset/css/_icon.module.css'
 import {Outlet, useNavigate} from 'react-router-dom'
-import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-} from '@ant-design/icons';
+import {UserOutlined} from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faUsers} from '@fortawesome/free-solid-svg-icons'
 import { AiFillDashboard, AiFillProduct } from "react-icons/ai";
@@ -75,17 +68,17 @@ const Admin = ({children}) => {
                 {
                   key: 'list-product',
                   icon: <AiFillProduct className="fs-4"/>,
-                  label: 'List product',
+                  label: 'Danh sách sản phẩm',
                 },
                 {
                   key: 'add-product',
                   icon: <IoMdAddCircle className="fs-4"/>,
-                  label: 'Add Product',
+                  label: 'Thêm sản phẩm',
                 },
                 {
                   key: "add-brand",
                   icon: <SiBrandfolder className="fs-4" />,
-                  label: "Thương hiệu",
+                  label: "Thêm thương hiệu",
                 },
                 {
                   key: "list-brand",
@@ -95,7 +88,7 @@ const Admin = ({children}) => {
                 {
                   key: "add-category",
                   icon: <BiCategoryAlt className="fs-4" />,
-                  label: "Loại sản phẩm",
+                  label: "Thêm loại sản phẩm",
                 },
                 {
                   key: "list-category",
@@ -117,12 +110,12 @@ const Admin = ({children}) => {
                 {
                     key:'list-bill',
                     icon: <RiBillFill className="fs-4"/>,
-                    label:'List Bill',
+                    label:'Danh sách hoá đơn',
                 },
                 {
-                    key:'bill',
+                    key:'add-bill',
                     icon:<FaRegMoneyBillAlt className="fs-4"/>,
-                    label:'Bill',
+                    label:'Tạo mới hoá đơn',
                 },
               ]
             },

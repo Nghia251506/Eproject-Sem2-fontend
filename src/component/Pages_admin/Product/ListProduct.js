@@ -52,9 +52,9 @@ const ListProduct = () => {
   const [open, setOpen] = useState(false);
   const [productID, setProductId] = useState("");
 
-  const showModal = (id) => {
+  const showModal = (e) => {
     setOpen(true);
-    setProductId(id);
+    setProductId(e);
   };
 
   const hideModal = () => {
@@ -80,14 +80,14 @@ const ListProduct = () => {
     action: (
       <>
         <Link
-          to={`/admin/product/${product._id}`}
+          to={`/admin/add-product/${product.id}`}
           className="fs-3 text-danger"
         >
           <BiEdit />
         </Link>
         <button
           className="ms-3 fs-3 text-danger bg-transparent border-0"
-          onClick={() => showModal(product._id)}
+          onClick={() => showModal(product.id)}
         >
           <AiFillDelete />
         </button>
