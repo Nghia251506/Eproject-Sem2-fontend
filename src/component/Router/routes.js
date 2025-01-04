@@ -24,6 +24,7 @@ const routes = [
         children: [
             {path:"",component: Dashboard},
             { path: "add-product", component: Addproduct},
+            { path: "add-product/:id", component: Addproduct},
             { path: "list-product", component: ListProduct},
             { path: "list-brand", component: BrandList},
             { path: "list-category", component: CategoryList},

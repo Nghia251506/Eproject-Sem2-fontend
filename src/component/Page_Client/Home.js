@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import {BottomLeft} from '../Navigation/Navigation'
 import _container from '../Asset/css/_container.module.css';
 import _home from '../Asset/css/_home.module.css';
@@ -6,8 +7,22 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStore, faPhone } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import {BannerSlice} from '../DataDisplay/Banner/BannerSlide' 
-import Banner from '../Asset/image/Banner1.JPG'
+import Banner1 from '../Asset/image/Banner2.JPG'
+import {getProductByCategory, resetState} from '../features/product/productSlice';
+import {ListCategories,resetStateCategory} from '../features/Category/categorySlice';
+// import Qr from '';
 function Home (){
+    const categoryState = useSelector((state) => state.category.categories);
+    const dispatch = useDispatch();
+
+    // useEffect(() => {
+    //     dispatch(resetStateCategory());
+    //     dispatch(ListCategories());
+    // }, [dispatch]);
+    const productState = useSelector((state) => state.product.products);
+
+    
+    
     return(
         <>
             <div className={_container.container}>
@@ -36,12 +51,15 @@ function Home (){
                     <div className={_home.homeBanner_1}>
                         <BannerSlice/>
                     </div>
-                    <div className={_home.homeBanner_1}>
-                        <div>
-                            {/* <img src={Banner} alt="Banner"/> */}
+                    <div>
+                        <div className={_home.cardvisit}>
+                            <img src={Banner1} alt="Banner"/>
                         </div>
                         <div>bcd</div>
                     </div>
+                 </div>
+                 <div>
+
                  </div>
             </div>
         </>

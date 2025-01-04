@@ -1,10 +1,10 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:4000/api";
+const API_URL = "http://192.168.55.108:3389";
 
 // List
 const getBrands = async () =>{
-    const response = await axios.get(`${API_URL}/list-brand`);
+    const response = await axios.get(`${API_URL}/admin/list-brand`);
     // console.log(response.data);
     return response.data;
 };

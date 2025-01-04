@@ -4,7 +4,15 @@ import productService from "./productService";
 // Khởi tạo trạng thái ban đầu
 const initialState = {
   products: [], // Danh sách sản phẩm
-  product: null, // Chi tiết sản phẩm
+  product: { // Thay vì chỉ có mảng `products`, bạn cần chứa thông tin sản phẩm riêng biệt
+    name: '',
+    description: '',
+    price: '',
+    quantity: '',
+    category_id: '',
+    brand_id: '',
+    image_url: ''
+  }, // Chi tiết sản phẩm
   isLoading: false, // Trạng thái đang tải
   isError: false, // Có lỗi xảy ra
   isSuccess: false, // Hành động thành công
@@ -45,6 +53,18 @@ export const getAProduct = createAsyncThunk(
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
     }
   }
+);
+
+export const getProductByCategory = createAsyncThunk(
+  "getProductByCategory",
+  async (category_id, thunkAPI) => {
+    try{
+      return await productService.getProductByCategory(category_id);
+    }catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
+  
+  }
+}
 );
 
 // Thunk để xóa sản phẩm
@@ -125,6 +145,24 @@ export const productSlice = createSlice({
         state.product = action.payload;
       })
       .addCase(getAProduct.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.payload;
+      })
+
+      .addCase(getProductByCategory.pending, (state) =>{
+        state.isLoading = true;
+      })
+
+      .addCase(getProductByCategory.fulfilled, (state, action) =>{
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.products = action.payload;
+      })
+
+      .addCase(getProductByCategory.rejected, (state, action) =>{
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;

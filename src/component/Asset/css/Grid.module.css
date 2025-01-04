@@ -1,6 +1,7 @@
 
 .grid{
   max-width: 1450px;
+  background-color: var(--color-primary);
 }
 
 .row {
