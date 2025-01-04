@@ -168,19 +168,19 @@ BEGIN
     DECLARE new_code VARCHAR(50);
 
     -- Lấy prefix của category
-    SELECT LEFT(name, 3)
+    SELECT LEFT(category_name, 3)
     INTO prefix_category
     FROM categories
     WHERE id = product_category_id;
 
     -- Lấy prefix của brand
-    SELECT LEFT(name, 3)
+    SELECT LEFT(brand_name, 3)
     INTO prefix_brand
     FROM brands
     WHERE id = product_brand_id;
 
     -- Tạo mã sản phẩm dạng PREFIX_CATEGORY-PREFIX_BRAND-ID
-    INSERT INTO products (name,description, price, quantity, category_id, brand_id, image_url)
+    INSERT INTO products (`name`,`description`, `price`, `quantity`, `category_id`, `brand_id`, `image_url`)
     VALUES (product_name,product_description, product_price, product_quantity, product_category_id, product_brand_id,product_image);
 
     SET new_code = CONCAT(UCASE(prefix_category), '-', UCASE(prefix_brand), '-', LPAD(LAST_INSERT_ID(), 3, '0'));
@@ -193,10 +193,13 @@ END //
 
 DELIMITER ;
 
+alter table products add column name varchar(255) NOT NULL after code;
+alter table products drop column product_name ;
+
+drop procedure AddProductWithCode;
 
 
 -- DML --
-use TNC;
 -- brand --
 insert into brands (`brand_name`) values("Dell");
 insert into brands (`brand_name`) values("Asus");
@@ -218,7 +221,7 @@ CALL AddProductWithCode(
     'Máy tính xách tay hiệu suất cao', 
     25000000, 
     10, 
-    6, 
+    1, 
     1, 
     'dell_xps_image.png'
 );
@@ -228,9 +231,21 @@ CALL AddProductWithCode(
     'Máy tính xách tay GAMING hiệu suất cao', 
     30000000, 
     10, 
-    7, 
+    2, 
     2, 
     'Asus_tuf.png'
 );
+
+CALL AddProductWithCode(
+    'Laptop Dell PRECITION', 
+    'Máy tính xách tay WORKSTATION hiệu suất cao', 
+    25000000, 
+    10, 
+    5, 
+    1, 
+    'dell_xps_image.png'
+);
+
+
 
 

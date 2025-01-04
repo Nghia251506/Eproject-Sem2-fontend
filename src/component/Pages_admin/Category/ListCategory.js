@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   deleteACategory,
   ListCategories,
-  resetState,
+  resetStateCategory,
 } from "../../features/Category/categorySlice";
 import CustomModal from "../../DataEntry/Modal/CustomModal";
 
@@ -42,7 +42,7 @@ const Categorylist = () => {
   };
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(resetState());
+    dispatch(resetStateCategory());
     dispatch(ListCategories());
   }, [dispatch]);
   const categoryState = useSelector((state) => state.category.categories);

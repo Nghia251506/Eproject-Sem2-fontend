@@ -1,10 +1,16 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:4000/api"; // Thay đổi URL nếu backend của bạn dùng địa chỉ khác
+const API_URL = "http://192.168.55.108:3389"; // Thay đổi URL nếu backend của bạn dùng địa chỉ khác
 
 // Lấy danh sách sản phẩm
 const ListCategories = async () => {
-  const response = await axios.get(`${API_URL}/list-category`);
+  const response = await axios.get(`${API_URL}/admin/list-category`);
+  // console.log(response); 
+  return response.data; // Trả về dữ liệu JSON từ backend
+};
+
+const ClientListCategories = async () => {
+  const response = await axios.get(`${API_URL}/api/list-category`);
   // console.log(response); 
   return response.data; // Trả về dữ liệu JSON từ backend
 };
@@ -40,6 +46,7 @@ const categoryService = {
   getCategoryById,
   deleteCategory,
   updateCategory,
+  ClientListCategories
 };
 
 export default categoryService;

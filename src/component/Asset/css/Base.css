@@ -1,5 +1,11 @@
 a{
-    font-size:large !important;
     text-decoration: none !important;
+    color: var(--color-text) !important;
+    font-size: small !important;
 }
 
+:root{
+    --color-primary:#e9e5e5;
+    --color-button: #F5F5F5;
+    --color-text: #000;
+}
