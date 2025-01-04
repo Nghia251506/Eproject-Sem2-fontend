@@ -1,3 +1,8 @@
+
+.grid{
+  max-width: 1450px;
+}
+
 .row {
     display: flex;
     flex-wrap: wrap;
