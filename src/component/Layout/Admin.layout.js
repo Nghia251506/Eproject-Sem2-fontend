@@ -13,6 +13,7 @@ import { MdOutlineFavoriteBorder } from "react-icons/md";
 import { RiBillFill } from "react-icons/ri";
 import { FaMoneyBillTransfer } from "react-icons/fa6";
 import { Button, Layout, Menu, theme } from 'antd';
+import {ToastContainer} from 'react-toastify'
 const { Header, Sider, Content } = Layout;
 const Admin = ({children}) => {
   const [collapsed, setCollapsed] = useState(false);
@@ -149,6 +150,17 @@ const Admin = ({children}) => {
             borderRadius: borderRadiusLG,
           }}
         >
+        <ToastContainer
+            position="top-right"
+            autoClose={250}
+            hideProgressBar={false}
+            newestOnTop={true}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            theme="light"
+          />
           {children || <Outlet />}
         </Content>
       </Layout>

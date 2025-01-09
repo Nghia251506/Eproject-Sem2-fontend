@@ -48,7 +48,9 @@ export const getAProduct = createAsyncThunk(
   "product/detail",
   async (id, thunkAPI) => {
     try {
-      return await productService.getProduct(id);
+      const result = await productService.getProduct(id);
+      // console.log(result);
+      return result;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
     }
@@ -69,7 +71,7 @@ export const getProductByCategory = createAsyncThunk(
 
 // Thunk để xóa sản phẩm
 export const deleteAProduct = createAsyncThunk(
-  "api/delete",
+  "product/delete",
   async (id, thunkAPI) => {
     try {
       return await productService.deleteProduct(id);
@@ -82,9 +84,10 @@ export const deleteAProduct = createAsyncThunk(
 // Thunk để cập nhật sản phẩm
 export const updateAProduct = createAsyncThunk(
   "product/update",
-  async (productData, thunkAPI) => {
+  async ({id,productData}, thunkAPI) => {
     try {
-      return await productService.updateProduct(productData);
+      const result =  await productService.updateProduct(id,productData);
+      return result;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
     }
@@ -139,6 +142,7 @@ export const productSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(getAProduct.fulfilled, (state, action) => {
+        // console.log('Product from getAProduct:', action.payload);
         state.isLoading = false;
         state.isError = false;
         state.isSuccess = true;
@@ -196,10 +200,16 @@ export const productSlice = createSlice({
         state.isLoading = false;
         state.isError = false;
         state.isSuccess = true;
-        state.products = state.products.map((product) =>
-          product.id === action.payload.id ? action.payload : product
-        );
+      
+        if (state.products && action.payload?.id) {
+          state.products = state.products.map((product) =>
+            product.id === action.payload.id ? action.payload : product
+          );
+        } else {
+          console.error("Không tìm thấy sản phẩm hoặc payload không hợp lệ.");
+        }
       })
+      
       .addCase(updateAProduct.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;

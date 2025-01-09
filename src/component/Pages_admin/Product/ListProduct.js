@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteAProduct, getProducts, resetState } from "../../features/product/productSlice";
 import { Link } from "react-router-dom";
 import CustomModal from "../../DataEntry/Modal/CustomModal";
+import { toast } from "react-toastify";
 
 // Cấu hình cột
 const columns = [
@@ -68,15 +69,16 @@ const ListProduct = () => {
     dispatch(getProducts());
   }, [dispatch]);
 
-  const productState = useSelector((state) => state.product.products);
+  const productState = useSelector((state) => state.product.products) || [];
   const data1 = productState.map((product, index) => ({
     key: index + 1,
-    code: product.code,
-    name: product.name,
-    brand: product.brand_name, // Lấy tên thương hiệu
-    category: product.category_name || "Không xác định", // Lấy tên loại sản phẩm
-    quantity: product.quantity,
-    price: product.price,
+    id: product?.id || "unknown",
+    code: product?.code || "unknown",
+    name: product?.name || "unknown",
+    brand: product?.brand_name || "", // Lấy tên thương hiệu
+    category: product?.category_name || "Không xác định", // Lấy tên loại sản phẩm
+    quantity: product?.quantity || "unknown",
+    price: product?.price || "",
     action: (
       <>
         <Link
@@ -98,6 +100,7 @@ const ListProduct = () => {
   const deleteProduct = (id) => {
     dispatch(deleteAProduct(id));
     setOpen(false);
+    toast.success("Sản phẩm đã được xóa thành công!");
     setTimeout(() => {
       dispatch(getProducts());
     }, 100);

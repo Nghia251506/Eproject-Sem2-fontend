@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://192.168.55.108:3389";
+const API_URL = "http://tncom.ddns.net:3389";
 
 // List
 const getBrands = async () =>{
