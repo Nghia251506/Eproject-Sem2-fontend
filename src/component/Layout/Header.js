@@ -2,6 +2,7 @@ import _header from '../Asset/css/_header.module.css'
 import _container from '../Asset/css/_container.module.css'
 import logo from '../Asset/image/logo_tnc.png'
 import {INPUT} from '../DataEntry/Input/input';
+import { LuShoppingBasket } from "react-icons/lu";
 import clsx from 'clsx';
 
 function Header(){
@@ -16,8 +17,13 @@ function Header(){
                             <div>
                                 <INPUT/>
                             </div>
-                        <div>
-                            card
+                        <div className="d-flex align-items-center gap-1">
+                            <div>
+                                <LuShoppingBasket style={{color: "white", fontSize:"1.25rem"}}/>
+                            </div>
+                            <div>
+                                <span style={{color: "white"}}> Giỏ hàng</span>
+                            </div>
                         </div>
                     </div>
                 </div>
