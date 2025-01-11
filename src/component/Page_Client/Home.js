@@ -6,10 +6,11 @@ import _home from '../Asset/css/_home.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStore, faPhone } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
-import {BannerSlice} from '../DataDisplay/Banner/BannerSlide' 
+import {BannerSlice, BannerBrand} from '../DataDisplay/Banner/BannerSlide' 
 import Banner1 from '../Asset/image/Banner2.JPG'
 import {getProductByCategory, resetState} from '../features/product/productSlice';
 import {ListCategories,resetStateCategory} from '../features/Category/categorySlice';
+import HomeProduct from './Product/HomeProduct'
 // import Qr from '';
 function Home (){
     const categoryState = useSelector((state) => state.category.categories);
@@ -58,8 +59,11 @@ function Home (){
                         <div>bcd</div>
                     </div>
                  </div>
-                 <div>
-
+                 <div className={_home.brandbanner}>
+                    <BannerBrand/>
+                    <div>
+                        <HomeProduct/>
+                    </div>
                  </div>
             </div>
         </>

@@ -41,9 +41,19 @@ const deleteProduct = async (id) => {
 };
 // Lấy sản phẩm theo category_id
 const getProductByCategory = async (category_id) => {
-  const response = await axios.getProductByCategory(`${API_URL}/getProductByCategory/${category_id}`);
+  const response = await axios.get(`${API_URL}/getProductByCategory/${category_id}`);
   return response.data;
 };
+
+const getProductByCode = async (code) => {
+  const response = await axios.post(`${API_URL}/getProductByCode`, [code],
+    {
+      headers: {
+        'Content-Type': 'application/json',  // Đảm bảo gửi dữ liệu dưới dạng JSON
+      },
+});
+  return response;
+}
 
 // Cập nhật sản phẩm
 const updateProduct = async (id,productData) => {
@@ -65,6 +75,7 @@ const productService = {
   deleteProduct,
   updateProduct,
   getProductByCategory,
+  getProductByCode,
 };
 
 export default productService;

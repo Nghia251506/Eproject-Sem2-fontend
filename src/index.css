@@ -11,3 +11,80 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.ant-layout-sider-collapsed{
+  flex: 0 0 80px !important;
+  max-width: 80px !important;
+  min-width: 80px !important;
+  width: 80px !important;
+}
+
+.sm-logo{
+  display: none;
+}
+
+.ant-layout-sider-collapsed .sm-logo{
+  display: block;
+}
+
+.ant-layout-sider-collapsed .lg-logo{
+  display: none;
+}
+
+.icon_setting:hover {
+  transform: rotate(90deg);
+  transition: transform 0.3s ease;
+  cursor:pointer;
+}
+
+
+
+/* Khi click vào, giữ nguyên trạng thái xoay */
+.rotate {
+  transform: rotate(90deg);
+}
+
+/* Menu cài đặt */
+/* .settings_menu {
+  position: absolute;
+  top:43%;
+  right: -120px; 
+  width: 150px;
+  background-color: #343a40;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  z-index: 100;
+  display: none;
+} */
+
+.settings_menu {
+  position: absolute;
+  bottom: 35%;
+  right: -120px;
+  width: 150px;
+  background-color: #343a40;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  z-index: 1050;
+  display: none;
+}
+
+.setting-container{
+  position:relative;
+}
+
+.icon_setting:hover + .settings_menu{
+  display: block;
+}
+
+/* Các mục trong menu */
+.settings_menu .dropdown_item {
+  padding: 10px;
+  color: black;
+  text-decoration: none;
+  display: block;
+}
+
+.settings_menu .dropdown_item:hover {
+  background-color: #495057;
+  color: white;
+}

@@ -72,13 +72,12 @@ const ListProduct = () => {
   const productState = useSelector((state) => state.product.products) || [];
   const data1 = productState.map((product, index) => ({
     key: index + 1,
-    id: product?.id || "unknown",
-    code: product?.code || "unknown",
-    name: product?.name || "unknown",
-    brand: product?.brand_name || "", // Lấy tên thương hiệu
-    category: product?.category_name || "Không xác định", // Lấy tên loại sản phẩm
-    quantity: product?.quantity || "unknown",
-    price: product?.price || "",
+    code: product.code,
+    name: product.name,
+    brand: product.brand_name, // Lấy tên thương hiệu
+    category: product.category_name, // Lấy tên loại sản phẩm
+    quantity: product.quantity,
+    price: product.price,
     action: (
       <>
         <Link

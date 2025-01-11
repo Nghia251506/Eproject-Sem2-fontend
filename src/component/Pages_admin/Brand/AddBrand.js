@@ -11,6 +11,7 @@ import {
   resetStateBrand,
   updateABrand,
 } from "../../features/Band/brandSlice";
+import form from '../../Asset/css/Form.module.css'
 
 let schema = yup.object().shape({
   title: yup.string().required("*Tên thương hiệu là bắt buộc"),
@@ -76,8 +77,8 @@ const AddBrand = () => {
       <h3 className="mb-4 title text-center">
         {getBrandId !== undefined ? "Cập nhật" : "Thêm"} thương hiệu
       </h3>
-      <div>
-        <form action="" onSubmit={formik.handleSubmit}>
+      <div className="container">
+        <form action="" onSubmit={formik.handleSubmit} className={form.form_add}>
           <CustomInput
             type="text"
             name="title"
@@ -86,7 +87,7 @@ const AddBrand = () => {
             value={formik.values.title}
             placeholder="Nhập tên thương hiệu"
             id="brand"
-            className=""
+            className="form-control py-3 mb-3"
           />
           <div className="error">
             {formik.touched.title && formik.errors.title}

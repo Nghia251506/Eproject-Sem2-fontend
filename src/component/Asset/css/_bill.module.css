@@ -1,0 +1,14 @@
+.input_add_product{
+    width: 100%;
+    border:1px solid #939292;
+    border-radius: 2px;
+}
+
+.btn_add_product{
+    border:0;
+    background-color: white;
+}
+
+.form{
+    /* padding:0 20px; */
+}

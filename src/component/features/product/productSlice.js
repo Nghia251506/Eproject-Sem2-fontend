@@ -94,6 +94,18 @@ export const updateAProduct = createAsyncThunk(
   }
 );
 
+export const getProductByCode = createAsyncThunk(
+  "product/getProductByCode",
+  async (code, thunkAPI) => {
+    try {
+      const result = await productService.getProductByCode(code);
+      return result;
+    }catch (error){
+      return thunkAPI.rejectWithValue(error.response?.data || error.message)
+    }
+  }
+)
+
 // Action để reset trạng thái
 export const resetState = createAction("product/reset-state");
 
@@ -171,6 +183,20 @@ export const productSlice = createSlice({
         state.isError = true;
         state.isSuccess = false;
         state.message = action.payload;
+      })
+
+      // Xử lý getProductByCode
+      .addCase(getProductByCode.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getProductByCode.fulfilled, (state, action) => {
+        state.loading = false;
+        state.products.push(action.payload); // Thêm sản phẩm vào danh sách
+      })
+      .addCase(getProductByCode.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       })
 
       // Xử lý deleteAProduct
