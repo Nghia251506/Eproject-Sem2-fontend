@@ -5,7 +5,9 @@ a{
 }
 
 :root{
-    --color-primary:#e9e5e5;
-    --color-button: #F5F5F5;
+    --color-primary:#084298;
     --color-text: #000;
+    --color-price: red;
+    --color-button:#9EC5FE;
+    --color-seemore:#3D8BFD;
 }

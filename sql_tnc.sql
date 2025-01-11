@@ -254,6 +254,7 @@ insert into brands (`brand_name`) values("Asus");
 insert into brands (`brand_name`) values("Lenovo");
 insert into brands (`brand_name`) values("Gigabyte");
 insert into brands (`brand_name`) values("Macbook");
+insert into brands (`brand_name`) values("HP");
 
 -- categories --
 insert into categories (`category_name`) values("Laptop Văn Phòng");
@@ -261,6 +262,12 @@ insert into categories (`category_name`) values("Laptop Gaming");
 insert into categories (`category_name`) values("PC Văn Phòng");
 insert into categories (`category_name`) values("PC Gaming");
 insert into categories (`category_name`) values("PC Workstation");
+insert into categories (`category_name`) values("Camera Wifi - IP");
+insert into categories (`category_name`) values("SmartHome");
+insert into categories (`category_name`) values("Loa");
+insert into categories (`category_name`) values("Audio - Tai Nghe");
+insert into categories (`category_name`) values("Internet - Wifi - Lan");
+insert into categories (`category_name`) values("Printer - Máy in");
 
 -- products --
 
@@ -289,10 +296,12 @@ CALL AddProductWithCode(
     'Máy tính xách tay WORKSTATION hiệu suất cao', 
     25000000, 
     10, 
-    5, 
+    2, 
     1, 
     'dell_xps_image.png'
 );
+
+insert into customers (`customer_name`, `address`, `phone`, `birth_day`) values ("Nguyễn Trọng Nghĩa", "Hà Nội", "0987654321", "2002-06-15");
 
 
 

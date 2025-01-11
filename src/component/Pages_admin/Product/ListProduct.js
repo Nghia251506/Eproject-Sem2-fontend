@@ -7,6 +7,9 @@ import { deleteAProduct, getProducts, resetState } from "../../features/product/
 import { Link } from "react-router-dom";
 import CustomModal from "../../DataEntry/Modal/CustomModal";
 import { toast } from "react-toastify";
+const truncateText = (text, maxLength) => {
+  return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
+};
 
 // Cấu hình cột
 const columns = [
@@ -22,6 +25,7 @@ const columns = [
     title: "Tên Sản Phẩm",
     dataIndex: "name",
     sorter: (a, b) => a.name.length - b.name.length,
+    render: (name) => truncateText(name, 30),
   },
   {
     title: "Thương Hiệu",
@@ -70,15 +74,16 @@ const ListProduct = () => {
   }, [dispatch]);
 
   const productState = useSelector((state) => state.product.products) || [];
-  const data1 = productState.map((product, index) => ({
+  const loading = useSelector((state) => state.product.loading);
+  const data1 = productState?.map((product, index) => ({
     key: index + 1,
-    code: product.code,
-    name: product.name,
-    brand: product.brand_name, // Lấy tên thương hiệu
-    category: product.category_name, // Lấy tên loại sản phẩm
-    quantity: product.quantity,
-    price: product.price,
-    action: (
+    code: product?.code || "N/A",
+    name: product?.name || "N/A",
+    brand: product?.brand_name || "N/A", // Lấy tên thương hiệu
+    category: product?.category_name || "N/A", // Lấy tên loại sản phẩm
+    quantity: product?.quantity || 0,
+    price: product?.price || 0,
+    action: product?.id ?(
       <>
         <Link
           to={`/admin/add-product/${product.id}`}
@@ -93,7 +98,7 @@ const ListProduct = () => {
           <AiFillDelete />
         </button>
       </>
-    ),
+    ): null,
   }));
 
   const deleteProduct = (id) => {
@@ -105,11 +110,15 @@ const ListProduct = () => {
     }, 100);
   };
 
+  if(loading){
+    return toast.loading("Đang tải danh sách sản phẩm");
+  }
+
   return (
     <div>
       <h3 className="mb-4 title">Danh Sách Sản Phẩm</h3>
       <div>
-        <Table columns={columns} dataSource={data1} />
+        <Table columns={columns} dataSource={data1} pagination={{ pageSize: 5 }}/>
       </div>
       <CustomModal
         hideModal={hideModal}
