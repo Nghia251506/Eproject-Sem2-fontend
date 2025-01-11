@@ -48,7 +48,9 @@ export const getAProduct = createAsyncThunk(
   "product/detail",
   async (id, thunkAPI) => {
     try {
-      return await productService.getProduct(id);
+      const result = await productService.getProduct(id);
+      // console.log(result);
+      return result;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
     }
@@ -69,7 +71,7 @@ export const getProductByCategory = createAsyncThunk(
 
 // Thunk để xóa sản phẩm
 export const deleteAProduct = createAsyncThunk(
-  "api/delete",
+  "product/delete",
   async (id, thunkAPI) => {
     try {
       return await productService.deleteProduct(id);
@@ -82,14 +84,27 @@ export const deleteAProduct = createAsyncThunk(
 // Thunk để cập nhật sản phẩm
 export const updateAProduct = createAsyncThunk(
   "product/update",
-  async (productData, thunkAPI) => {
+  async ({id,productData}, thunkAPI) => {
     try {
-      return await productService.updateProduct(productData);
+      const result =  await productService.updateProduct(id,productData);
+      return result;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
     }
   }
 );
+
+export const getProductByCode = createAsyncThunk(
+  "product/getProductByCode",
+  async (code, thunkAPI) => {
+    try {
+      const result = await productService.getProductByCode(code);
+      return result;
+    }catch (error){
+      return thunkAPI.rejectWithValue(error.response?.data || error.message)
+    }
+  }
+)
 
 // Action để reset trạng thái
 export const resetState = createAction("product/reset-state");
@@ -139,6 +154,7 @@ export const productSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(getAProduct.fulfilled, (state, action) => {
+        // console.log('Product from getAProduct:', action.payload);
         state.isLoading = false;
         state.isError = false;
         state.isSuccess = true;
@@ -169,6 +185,20 @@ export const productSlice = createSlice({
         state.message = action.payload;
       })
 
+      // Xử lý getProductByCode
+      .addCase(getProductByCode.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getProductByCode.fulfilled, (state, action) => {
+        state.loading = false;
+        state.products.push(action.payload); // Thêm sản phẩm vào danh sách
+      })
+      .addCase(getProductByCode.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
       // Xử lý deleteAProduct
       .addCase(deleteAProduct.pending, (state) => {
         state.isLoading = true;
@@ -196,10 +226,16 @@ export const productSlice = createSlice({
         state.isLoading = false;
         state.isError = false;
         state.isSuccess = true;
-        state.products = state.products.map((product) =>
-          product.id === action.payload.id ? action.payload : product
-        );
+      
+        if (state.products && action.payload?.id) {
+          state.products = state.products.map((product) =>
+            product.id === action.payload.id ? action.payload : product
+          );
+        } else {
+          console.error("Không tìm thấy sản phẩm hoặc payload không hợp lệ.");
+        }
       })
+      
       .addCase(updateAProduct.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;

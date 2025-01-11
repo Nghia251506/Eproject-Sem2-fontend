@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import _admin from '../Asset/css/_navigation.module.css'
+import '../Asset/css/_navigation.module.css'
 import {Outlet, useNavigate} from 'react-router-dom'
 import {UserOutlined} from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -9,10 +10,11 @@ import { FaListAlt, FaToggleOff, FaToggleOn, FaRegMoneyBillAlt } from "react-ico
 import { IoMdAddCircle } from "react-icons/io";
 import { SiBrandfolder } from "react-icons/si";
 import { BiCategoryAlt } from "react-icons/bi";
-import { MdOutlineFavoriteBorder } from "react-icons/md";
+import { MdOutlineFavoriteBorder,MdOutlineSettings } from "react-icons/md";
 import { RiBillFill } from "react-icons/ri";
 import { FaMoneyBillTransfer } from "react-icons/fa6";
 import { Button, Layout, Menu, theme } from 'antd';
+import {ToastContainer} from 'react-toastify'
 const { Header, Sider, Content } = Layout;
 const Admin = ({children}) => {
   const [collapsed, setCollapsed] = useState(false);
@@ -20,10 +22,25 @@ const Admin = ({children}) => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   const navigate = useNavigate();
+  const [showMenu, setShowMenu] = useState(false);
+
+  const handleMouseEnter = () => {
+    setShowMenu(true);
+  };
+
+  const handleMouseLeave = () => {
+    setShowMenu(false);
+  };
   return (
     <Layout>
       <Sider trigger={null} collapsible collapsed={collapsed}>
-        <div className="demo-logo-vertical" />
+        <div className={_admin.logo}>
+          {/* <div></div> */}
+          <h2 className="text-white fs-5 text-center py-3 mb-0">
+            <span className="sm-logo">TNC</span>
+            <span className="lg-logo">TNC SOFTWARE</span>
+          </h2>
+        </div>
         <Menu
           theme="dark"
           mode="inline"
@@ -124,11 +141,13 @@ const Admin = ({children}) => {
       </Sider>
       <Layout>
         <Header
+        className="d-flex justify-content-between ps-3 pe-5 align-items-center"
           style={{
             padding: 0,
             background: colorBgContainer,
           }}
         >
+          <div>
           <Button
             type="text"
             icon={collapsed ? <FaToggleOff /> : <FaToggleOn />}
@@ -139,6 +158,19 @@ const Admin = ({children}) => {
               height: 64,
             }}
           />
+          </div>
+          <div className="d-flex gap-5 align-items-center">
+            <div></div>
+            <div className="d-flex">
+              <div>
+                <img src="" alt=""/>
+              </div>
+              <div>
+                <span>Welcome</span>
+                <span className="ms-2">User</span>
+              </div>
+            </div>
+          </div>
         </Header>
         <Content
           style={{
@@ -149,6 +181,17 @@ const Admin = ({children}) => {
             borderRadius: borderRadiusLG,
           }}
         >
+        <ToastContainer
+            position="top-right"
+            autoClose={250}
+            hideProgressBar={false}
+            newestOnTop={true}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            theme="light"
+          />
           {children || <Outlet />}
         </Content>
       </Layout>

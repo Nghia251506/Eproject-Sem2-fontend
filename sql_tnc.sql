@@ -76,13 +76,14 @@ CREATE TABLE reviews (
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
-CREATE TABLE admins (
+CREATE TABLE customers (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    permissions JSON, -- JSON lưu trữ các quyền như ['manage_users', 'manage_orders', 'manage_products']
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id)
+    customer_name varchar(255) NOT NULL,
+    address text NOT NULL,
+    phone varchar(15) NOT NULL,
+    birth_day DATE
 );
+
 
 CREATE TABLE discounts (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -131,14 +132,16 @@ CREATE TABLE settings (
 
 CREATE TABLE bills (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    admin_id INT NOT NULL, -- Người lập hóa đơn
-    customer_name VARCHAR(100), -- Tên khách hàng (nếu không có tài khoản)
-    customer_phone VARCHAR(15), -- Số điện thoại khách hàng
+    user_id INT NOT NULL,
+    customer_id INT NOT NULL,  
+    bill_code varchar(255) NOT NULL,
     total_price BIGINT NOT NULL,
     payment_method ENUM('cash', 'credit_card', 'online') DEFAULT 'cash', -- Phương thức thanh toán
+    status ENUM('paid', 'unpaid'),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (admin_id) REFERENCES admins(id)
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (customer_id) REFERENCES customers(id)
 );
 
 CREATE TABLE bill_details (
@@ -151,6 +154,8 @@ CREATE TABLE bill_details (
     FOREIGN KEY (product_id) REFERENCES products(id)
 );
 
+
+-- procedure tự sinh code sản phẩm khi tạo mới -- 
 DELIMITER //
 
 CREATE PROCEDURE AddProductWithCode(
@@ -192,6 +197,49 @@ BEGIN
 END //
 
 DELIMITER ;
+-- procedure tự sinh mã hoá đơn khi tạo
+DELIMITER $$
+
+CREATE PROCEDURE createBill(
+    IN p_user_id INT,
+    IN p_customer_id INT,
+    IN p_total_price BIGINT,
+    IN p_payment_method ENUM('cash', 'credit_card', 'online'),
+    IN p_status ENUM('paid', 'unpaid')
+)
+BEGIN
+    DECLARE new_bill_id INT;
+    DECLARE bill_code VARCHAR(50);
+    DECLARE currentDate VARCHAR(8);  -- Đổi tên biến từ current_date thành currentDate
+    DECLARE bill_count INT;
+
+    -- Lấy ngày hiện tại dưới dạng YYYYMMDD
+    SET currentDate = DATE_FORMAT(NOW(), '%Y%m%d');
+
+    -- Tìm số thứ tự của hóa đơn trong ngày (Số hóa đơn đã được tạo trong ngày này)
+    SELECT COUNT(*) INTO bill_count
+    FROM bills
+    WHERE DATE(created_at) = CURDATE(); -- So sánh ngày tạo của hóa đơn với ngày hiện tại
+
+    -- Tạo mã hóa đơn theo định dạng HDYYYYMMDD-XXX
+    SET bill_code = CONCAT('HD', currentDate, '-', LPAD(bill_count + 1, 3, '0'));
+
+    -- Tạo hóa đơn mới
+    INSERT INTO bills (user_id, customer_id, bill_code, total_price, payment_method, status, created_at, updated_at)
+    VALUES (p_user_id, p_customer_id, bill_code, p_total_price, p_payment_method, p_status, NOW(), NOW());
+
+    -- Lấy ID của hóa đơn vừa tạo
+    SET new_bill_id = LAST_INSERT_ID();
+
+    -- Trả về ID và mã hóa đơn mới
+    SELECT new_bill_id AS bill_id, bill_code AS code;
+END $$
+
+DELIMITER ;
+
+
+
+-- DML
 
 alter table products add column name varchar(255) NOT NULL after code;
 alter table products drop column product_name ;

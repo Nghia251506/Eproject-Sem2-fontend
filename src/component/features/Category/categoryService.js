@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://192.168.55.108:3389"; // Thay đổi URL nếu backend của bạn dùng địa chỉ khác
+const API_URL = "http://tncom.ddns.net:3389"; // Thay đổi URL nếu backend của bạn dùng địa chỉ khác
 
 // Lấy danh sách sản phẩm
 const ListCategories = async () => {
@@ -17,7 +17,7 @@ const ClientListCategories = async () => {
 
 // Tạo mới sản phẩm
 const createCategory = async (categoryData) => {
-  const response = await axios.post(`${API_URL}/add-category`, categoryData);
+  const response = await axios.post(`${API_URL}/admin/add-category`, categoryData);
   return response.data; // Trả về sản phẩm vừa tạo
 };
 
@@ -29,13 +29,13 @@ const getCategoryById = async (id) => {
 
 // Xóa sản phẩm theo ID
 const deleteCategory = async (id) => {
-  const response = await axios.delete(`${API_URL}/delete-category/${id}`);
+  const response = await axios.delete(`${API_URL}/admin/delete-category/${id}`);
   return response.data; // Trả về thông báo hoặc kết quả xóa
 };
 
 // Cập nhật sản phẩm
 const updateCategory = async (categoryData) => {
-  const response = await axios.put(`${API_URL}/update/${categoryData.id}`, categoryData);
+  const response = await axios.put(`${API_URL}/admin/update/${categoryData.id}`, categoryData);
   return response.data; // Trả về sản phẩm đã cập nhật
 };
 

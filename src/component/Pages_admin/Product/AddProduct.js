@@ -4,188 +4,156 @@ import ReactQuill from "react-quill";
 import { useLocation, useNavigate } from "react-router-dom";
 import 'react-quill/dist/quill.snow.css';
 import { toast } from "react-toastify";
-import * as yup from "yup";
-import { useFormik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { getBrands } from "../../features/Band/brandSlice";
 import { ListCategories } from "../../features/Category/categorySlice";
 import _input from '../../Asset/css/_input.module.css'
-import { createProduct, resetState, getAProduct, updateAProduct } from "../../features/product/productSlice";
+import { createProduct, getAProduct, updateAProduct } from "../../features/product/productSlice";
 
-// Validation schema
-let schema = yup.object().shape({
-  name: yup.string().required("*Nhập tên sản phẩm"),
-  description: yup.string().required("*Nhập mô tả sản phẩm"),
-  price: yup.number().required("*Nhập giá sản phẩm"),
-  quantity: yup.number().required("*Nhập số lượng sản phẩm"),
-  category_id: yup.string().required("*Chọn loại sản phẩm"),
-  brand_id: yup.string().required("*Chọn thương hiệu sản phẩm"),
-  image_url: yup.string().url("*Nhập URL hình ảnh hợp lệ"),
-});
-
-const Addproduct = () => {
+const AddProduct = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [images, setImages] = useState([]);
+  const location = useLocation();
+  const getProductId = location.pathname.split("/")[3];
+
+  const [formValues, setFormValues] = useState({
+    id: "",
+    code: "",
+    name: "",
+    description: "",
+    price: "",
+    quantity: "",
+    category_id: "",
+    brand_id: "",
+    image_url: "",
+  });
+
   const brandState = useSelector((state) => state.brand.brands);
   const catState = useSelector((state) => state.category.categories);
-  const { product} = useSelector((state) => state.product);
-  const location = useLocation();
-  const getProductId = location.pathname.split("/")[3]; // Lấy ID sản phẩm từ URL
-
-  const {
-    isSuccess,
-    isError,
-    createdProduct,
-    updateProduct,
-  } = product;
+  const { product } = useSelector((state) => state.product);
 
   useEffect(() => {
     dispatch(getBrands());
     dispatch(ListCategories());
-  }, [dispatch]);
 
-  useEffect(() => {
-    if (getProductId !== undefined) {
-      dispatch(getAProduct(getProductId)); // Lấy thông tin sản phẩm theo ID
-    } else {
-      dispatch(resetState());
+    if (getProductId) {
+      dispatch(getAProduct(getProductId));
     }
-  }, [getProductId]);
-
+  }, [dispatch, getProductId]);
+  // console.log(getProductId);
   useEffect(() => {
-    console.log('Product data: ', getProductId);
-  }, [getProductId]);
+    // Kiểm tra nếu product.result tồn tại và là một mảng
+    const productData = product?.[0] || {}; // Lấy phần tử đầu tiên hoặc để trống nếu không có phần tử
+  
+    if (Object.keys(productData).length > 0) {
+      setFormValues({
+        id: productData.id || "",
+        code: productData.code || "",
+        name: productData.name || "",
+        description: productData.description || "",
+        price: productData.price || "",
+        quantity: productData.quantity || "",
+        category_id: productData.category_id || "",
+        brand_id: productData.brand_id || "",
+        image_url: productData.image_url || "",
+      });
+      console.log(formValues);
+    }
+  }, [product]);
+  
+  
+  useEffect(() => {
+    console.log('Current formValues:', formValues);
+  }, [formValues]); 
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues((formValues) => ({
+      ...formValues,
+      [name]: value,  // Cập nhật giá trị của trường tương ứng
+    }));
+  };
   
 
-  useEffect(() => {
-    if (isSuccess && createdProduct) {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  
+    // Kiểm tra nếu giá trị quan trọng nào đó bị thiếu
+    if (!formValues.name || !formValues.price || !formValues.quantity) {
+      toast.error("Vui lòng điền đầy đủ thông tin.");
+      return;
+    }
+  
+    if (getProductId) {
+      // console.log(data);
+      dispatch(updateAProduct({id:getProductId, productData:formValues}));
+      console.log("Dữ liệu gửi đi backend: ", formValues);
+      toast.success("Cập nhật sản phẩm thành công!");
+    } else {
+      dispatch(createProduct(formValues));
       toast.success("Thêm sản phẩm thành công!");
     }
-    if (isError) {
-      toast.error("Đã có lỗi xảy ra!");
-    }
-    if (isSuccess && updateProduct) {
-      toast.success("Cập nhật sản phẩm thành công!");
+  
+    setTimeout(() => {
       navigate("/admin/list-product");
-    }
-  }, [isSuccess, isError]);
-
-  useEffect(() => {
-    if (!product && getProductId) {
-      return <div>Loading...</div>; // Hoặc có thể return một spinner loading
-    }
-  },[]);
-
-  // Khởi tạo formik và đổ giá trị vào form
-  const formik = useFormik({
-    enableReinitialize: true,  // Đảm bảo form được khởi tạo lại khi có dữ liệu mới
-    initialValues: {
-      id: product.id || "",
-      code: product.code || "",
-      name: product.name || "",
-      description: product.description || "",
-      price: product.price || "",
-      quantity: product.quantity || "",
-      category_id: product.category_id || "",
-      brand_id: product.brand_id || "",
-      image_url: product.image_url || "",
-    },
-    validationSchema: schema,
-    onSubmit: (values) => {
-      if (getProductId !== undefined) {
-        const data = { id: getProductId, productData: values };
-        dispatch(updateAProduct(data));  // Cập nhật sản phẩm
-        dispatch(resetState());
-      } else {
-        dispatch(createProduct(values));  // Thêm sản phẩm mới
-        formik.resetForm();
-        setImages([]);
-        setTimeout(() => {
-          dispatch(resetState());
-        }, 3000);
-      }
-    },
-  });
-
-  useEffect(() => {
-    console.log('Product data: ', product); // Kiểm tra dữ liệu trả về
-  }, []);
+    }, 2000);
+  };
+  
 
   return (
     <div>
       <h3 className="mb-4 title">
-        {getProductId !== undefined ? "Cập nhật" : "Thêm"} sản phẩm
+        {getProductId ? "Cập nhật" : "Thêm"} sản phẩm
       </h3>
-      <form onSubmit={formik.handleSubmit} className="d-flex gap-3 flex-column">
-        <CustomInput
-          type="hidden"
-          placeholder="Nhập tên sản phẩm"
-          name="id"
-          value={formik.values.id} // Đổ giá trị từ formik vào
-          className="py-3 mb-3"
-        />
-        <span>Mã sản phẩm</span>
+      <form onSubmit={handleSubmit} className="d-flex gap-3 flex-column">
+      <span>Mã sản phẩm</span>
         <CustomInput
           type="text"
           name="code"
-          onChg={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.code} // Đổ giá trị từ formik vào
-          className="py-3 mb-3"
-          readonly 
+          value={formValues.code}
+          onChg={handleInputChange}
+          readOnly = {true}
         />
         <span>Tên sản phẩm</span>
         <CustomInput
           type="text"
           placeholder="Nhập tên sản phẩm"
           name="name"
-          onChg={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.name} // Đổ giá trị từ formik vào
-          className="py-3 mb-3"
-        />
-        <div className={_input.error}>{formik.touched.name && formik.errors.name}</div>
-
-        <ReactQuill
-          theme="snow"
-          name="description"
-          onChange={formik.handleChange}
-          value={formik.values.description} // Đổ giá trị từ formik vào
+          value={formValues.name}
+          onChg={handleInputChange}
           className="form-control py-3 mb-3"
         />
-        <div className={_input.error}>
-          {formik.touched.description && formik.errors.description}
-        </div>
-
+        <span>Mô tả sản phẩm</span>
+        <CustomInput
+          type="text"
+          name="description"
+          value={formValues.description}
+          onChg={handleInputChange}
+          className="form-control py-3 mb-3"
+        />
+        <span>Giá sản phẩm</span>
         <CustomInput
           type="number"
           placeholder="Nhập giá sản phẩm"
           name="price"
-          onChg={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.price} // Đổ giá trị từ formik vào
+          value={formValues.price}
+          onChg={handleInputChange}
           className="form-control py-3 mb-3"
         />
-        <div className={_input.error}>{formik.touched.price && formik.errors.price}</div>
-
+        <span>Số lượng sản phẩm</span>
         <CustomInput
           type="number"
           placeholder="Nhập số lượng sản phẩm"
           name="quantity"
-          onChg={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.quantity} // Đổ giá trị từ formik vào
+          value={formValues.quantity}
+          onChg={handleInputChange}
+          className="form-control py-3 mb-3"
         />
-        <div className={_input.error}>
-          {formik.touched.quantity && formik.errors.quantity}
-        </div>
-
+        <span>Thể loại sản phẩm</span>
         <select
           name="category_id"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.category_id} // Đổ giá trị từ formik vào
+          value={formValues.category_id}
+          onChange={handleInputChange}
           className="form-control py-3 mb-3"
         >
           <option value="">Chọn loại sản phẩm</option>
@@ -195,15 +163,11 @@ const Addproduct = () => {
             </option>
           ))}
         </select>
-        <div className={_input.error}>
-          {formik.touched.category_id && formik.errors.category_id}
-        </div>
-
+        <span>Hãng sản phẩm</span>
         <select
           name="brand_id"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.brand_id} // Đổ giá trị từ formik vào
+          value={formValues.brand_id}
+          onChange={handleInputChange}
           className="form-control py-3 mb-3"
         >
           <option value="">Chọn thương hiệu</option>
@@ -213,32 +177,22 @@ const Addproduct = () => {
             </option>
           ))}
         </select>
-        <div className="error">
-          {formik.touched.brand_id && formik.errors.brand_id}
-        </div>
-
+        <span>Link hình ảnh sản phẩm</span>
         <CustomInput
           type="text"
           placeholder="URL hình ảnh"
           name="image_url"
-          onChg={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.image_url} // Đổ giá trị từ formik vào
+          value={formValues.image_url}
+          onChg={handleInputChange}
           className="form-control py-3 mb-3"
         />
-        <div className="error">
-          {formik.touched.image_url && formik.errors.image_url}
-        </div>
 
-        <button
-          className="btn btn-success border-0 rounded-3 my-5"
-          type="submit"
-        >
-          {getProductId !== undefined ? "Cập nhật" : "Thêm"} sản phẩm
+        <button className="btn btn-success border-0 rounded-3 my-5" type="submit">
+          {getProductId ? "Cập nhật" : "Thêm"} sản phẩm
         </button>
       </form>
     </div>
   );
 };
 
-export default Addproduct;
+export default AddProduct;

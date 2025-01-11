@@ -63,7 +63,7 @@ export const updateABrand = createAsyncThunk(
 );
 
 // Action để reset trạng thái
-export const resetState = createAction("RevertAll");
+export const resetStateBrand = createAction("RevertAll");
 
 // Khởi tạo trạng thái ban đầu
 const initialState = {
@@ -171,7 +171,7 @@ const brandSlice = createSlice({
       })
 
       // Xử lý resetState
-      .addCase(resetState, () => initialState);
+      .addCase(resetStateBrand, () => initialState);
   },
 });
 
