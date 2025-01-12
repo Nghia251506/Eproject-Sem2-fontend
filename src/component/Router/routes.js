@@ -14,15 +14,17 @@ import ListOrder from '../Pages_admin/Order/ListOrder'
 import AddBill from '../Pages_admin/Bill/AddBill'
 import ListBill from '../Pages_admin/Bill/ListBill'
 import ListCustomer from '../Pages_admin/Customer/ListCustomer'
+import ProductDetail from '../Page_Client/Product/ProductDetail'
 
 const routes = [
     { path: "/login", component: Login},
     { path: "/forgotpassword", component: ForgotPassword},
     { 
-        path: "/", 
+        path: "", 
         layout: LayoutClient,
         children: [
-            {path:"", component: Home}
+            {path:"/", component: Home},
+            {path:"/:name/:id", component: ProductDetail},
         ],
     },
     {

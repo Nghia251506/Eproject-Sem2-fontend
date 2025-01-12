@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import _home from '../../Asset/css/_home.module.css';
 import { GoChevronRight } from "react-icons/go";
 import { LuShoppingBasket } from "react-icons/lu";
+import {Link} from 'react-router-dom'
 
 const HomeProduct = () => {
     const dispatch = useDispatch();
@@ -80,7 +81,7 @@ const HomeProduct = () => {
                                         alt=""
                                         className={_home.product_items_img}
                                     />
-                                    <span>{truncateText(product.name, 40)}</span>
+                                    <Link to={`/${product.name}/${product.id}`}><span>{truncateText(product.name, 40)}</span></Link>
                                     <p className={_home.product_items_price}>
                                         {product.price.toLocaleString("vi-VN")}₫
                                     </p>
