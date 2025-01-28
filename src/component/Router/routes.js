@@ -14,8 +14,8 @@ import ListOrder from '../Pages_admin/Order/ListOrder'
 import AddBill from '../Pages_admin/Bill/AddBill'
 import ListBill from '../Pages_admin/Bill/ListBill'
 import ListCustomer from '../Pages_admin/Customer/ListCustomer'
-import ProductDetail from '../Page_Client/Product/ProductDetail'
-
+import ProductDetail from '../Page_Client/Product/ProductDetail';
+import ListProductByCategory from '../Page_Client/Product/ListProductByCategory'
 const routes = [
     { path: "/login", component: Login},
     { path: "/forgotpassword", component: ForgotPassword},
@@ -25,6 +25,7 @@ const routes = [
         children: [
             {path:"/", component: Home},
             {path:"/:name/:id", component: ProductDetail},
+            {path:"/:category_name", component: ListProductByCategory},
         ],
     },
     {

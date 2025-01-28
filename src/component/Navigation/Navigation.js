@@ -4,6 +4,7 @@ import { MenuOutlined } from '@ant-design/icons';
 import _navigation from '../Asset/css/_navigation.module.css'
 import {ClientListCategories, resetStateCategory} from '../features/Category/categorySlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 const BottomLeft = () => {
   const dispatch = useDispatch();
@@ -17,7 +18,7 @@ const BottomLeft = () => {
 
   const menuItems = categoryState.map((category) => ({
     key: category._id,
-    label: <a href={`/${category.category_name}`}>{category.category_name}</a>,
+    label: <Link to={`/${category.category_name}`}>{category.category_name}</Link>,
   }));
 
   return (

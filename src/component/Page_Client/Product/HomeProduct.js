@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ClientListCategories, resetStateCategory } from '../../features/Category/categorySlice';
+import { ListCategories, resetStateCategory } from '../../features/Category/categorySlice';
 import { getProducts, resetState } from "../../features/product/productSlice";
 import { useDispatch, useSelector } from 'react-redux';
 import _home from '../../Asset/css/_home.module.css';
@@ -18,7 +18,7 @@ const HomeProduct = () => {
     // Fetch categories
     useEffect(() => {
         dispatch(resetStateCategory());
-        dispatch(ClientListCategories());
+        dispatch(ListCategories());
     }, [dispatch]);
 
     // Fetch products
@@ -96,12 +96,13 @@ const HomeProduct = () => {
                         </div>
                         {/* Hiển thị nút "Xem thêm" nếu còn sản phẩm */}
                         {remainingProducts > 0 && (
-                            <button
-                                onClick={() => handleShowMore(category.category_name)}
-                                className={_home.button_seemore}
-                            >
-                                Xem thêm ({remainingProducts}) sản phẩm <GoChevronRight/>
-                            </button>
+                            <div style={{marginTop:"1rem", textAlign:"center"}}>
+                                <Link to={`/${category.category_name}`}
+                                    className={_home.button_seemore}
+                                >
+                                    Xem thêm ({remainingProducts}) sản phẩm <GoChevronRight/>
+                                </Link>
+                            </div>
                         )}
                         {/* Hiển thị thông báo nếu không có sản phẩm */}
                         {filteredProducts.length === 0 && <p>Không có sản phẩm nào trong danh mục này.</p>}

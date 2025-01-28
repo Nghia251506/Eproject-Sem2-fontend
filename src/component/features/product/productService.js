@@ -9,6 +9,11 @@ const getProducts = async () => {
   return response.data; // Trả về dữ liệu JSON từ backend
 };
 
+const fetchProducts = async () => {
+  const response = await axios.get(`${API_URL}/list-product`);
+  return response.data; // Trả về dữ liệu JSON từ backend
+}
+
 // Tạo mới sản phẩm
 const createProduct = async (productData) => {
   const response = await axios.post(
@@ -27,7 +32,7 @@ const createProduct = async (productData) => {
 
 // Lấy thông tin chi tiết của một sản phẩm
 const getProduct = async (id) => {
-  const response = await axios.get(`${API_URL}/admin/detail/${id}`);
+  const response = await axios.get(`${API_URL}/api/detail/${id}`);
   // console.log(response.data);
   return response.data; // Trả về chi tiết sản phẩm
 };
@@ -55,6 +60,11 @@ const getProductByCode = async (code) => {
   return response;
 }
 
+const ProductDetail = async(id,name) =>{
+  const response = await axios.get(`${API_URL}/:${name}/:${id}`);
+  return response.data;
+}
+
 // Cập nhật sản phẩm
 const updateProduct = async (id,productData) => {
   const response = await axios.put(`${API_URL}/admin/add-product/${id}`,
@@ -76,6 +86,8 @@ const productService = {
   updateProduct,
   getProductByCategory,
   getProductByCode,
+  ProductDetail,
+  fetchProducts
 };
 
 export default productService;

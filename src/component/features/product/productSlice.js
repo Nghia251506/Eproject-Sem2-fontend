@@ -57,6 +57,30 @@ export const getAProduct = createAsyncThunk(
   }
 );
 
+export const ClientProducts = createAsyncThunk(
+  "product/list-product",
+  async(_,thunkAPI) => {
+    try {
+      const result = await productService.fetchProducts();
+      return result;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
+    }
+  }
+)
+
+export const ClientProductDetail = createAsyncThunk(
+  "product/productdetail",
+  async(id,name, thunkAPI) => {
+    try{
+      const result = await productService.ProductDetail(name,id);
+      return result;
+    }catch(error){
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
 export const getProductByCategory = createAsyncThunk(
   "getProductByCategory",
   async (category_id, thunkAPI) => {
@@ -166,6 +190,43 @@ export const productSlice = createSlice({
         state.isSuccess = false;
         state.message = action.payload;
       })
+      // Xử lý state Detail
+      .addCase(ClientProductDetail.pending, (state) =>{
+        state.isLoading = true;
+      })
+
+      .addCase(ClientProductDetail.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.product = action.payload;
+      })
+
+      .addCase(ClientProductDetail.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.payload;
+      })
+
+      // Xử lý Client list product
+      .addCase(ClientProducts.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(ClientProducts.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.products = action.payload;
+      })
+      .addCase(ClientProducts.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.payload;
+      })
+
+      // Xử lý updateAProduct
 
       .addCase(getProductByCategory.pending, (state) =>{
         state.isLoading = true;
