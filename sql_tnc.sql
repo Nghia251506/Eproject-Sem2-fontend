@@ -1,15 +1,25 @@
-create database TNC;
+-- create database TNC;
 
-use TNC;
+use TNC; 
 
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
     phone VARCHAR(15),
-    role ENUM('admin', 'customer') DEFAULT 'customer',
+    role ENUM('customer') DEFAULT 'customer',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE employees(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255),
+    password VARCHAR(255),
+    email VARCHAR(255),
+    phone VARCHAR(255),
+    role ENUM ('employee') DEFAULT 'employee',
+    create_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE categories (
@@ -25,21 +35,32 @@ CREATE TABLE brands (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE attributes(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE,
+    create_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE suppliers(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    supplier_code VARCHAR(255),
+    name VARCHAR(255),
+    phone VARCHAR(15),
+    address VARCHAR(255),
+    email VARCHAR(255),
+    conpany VARCHAR(255),
+    tax_code VARCHAR(15),
+    create_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    update_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE products (
     id INT AUTO_INCREMENT PRIMARY KEY,
     code VARCHAR(255),
     name VARCHAR(255) NOT NULL,
-    description TEXT,
+    description LONGTEXT,
     price BIGINT NOT NULL,
     quantity INT DEFAULT 0,
-    cpu varchar(255),
-    ram varchar(255),
-    ssd varchar(255),
-    hdd varchar(255),
-    psu varchar(255),
-    mainboard varchar(255),
-    cases varchar(255),
-    heatsink varchar(255),
     category_id int not null,
     brand_id INT,
     image_url VARCHAR(255),
@@ -52,16 +73,12 @@ CREATE TABLE products (
 CREATE TABLE product_detail(
 	id int auto_increment not null primary key,
     product_id int not null,
-    label varchar(255),
-    item_1 varchar(255),
-    item_2 varchar(255),
-    item_3 varchar(255),
-    item_4 varchar(255),
-    item_5 varchar(255),
-    item_6 varchar(255),
-    item_7 varchar(255),
-    item_8 varchar(255),
-    FOREIGN KEY (product_id) REFERENCES products(id)
+    attribute_id int not null,
+    val varchar(255),
+    supplier_id int,
+    FOREIGN KEY (product_id) REFERENCES products(id),
+    FOREIGN KEY (attribute_id) REFERENCES attributes(id),
+    FOREIGN KEY (supplier_id) REFERENCES suppliers(id)
 );
 
 
@@ -82,7 +99,7 @@ CREATE TABLE reviews (
     product_id INT NOT NULL,
     user_id INT NOT NULL,
     rating INT CHECK (rating BETWEEN 1 AND 5),
-    comment TEXT,
+    comment LONGTEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (product_id) REFERENCES products(id),
     FOREIGN KEY (user_id) REFERENCES users(id)
@@ -91,7 +108,7 @@ CREATE TABLE reviews (
 CREATE TABLE customers (
     id INT AUTO_INCREMENT PRIMARY KEY,
     customer_name varchar(255) NOT NULL,
-    address text,
+    address varchar(255),
     phone varchar(15),
     email varchar(255),
     birth_day DATE
@@ -120,7 +137,7 @@ CREATE TABLE cart (
 
 CREATE TABLE bills (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
+    employee_id INT NOT NULL,
     customer_id INT NOT NULL,
     product_id INT NOT NULL,
     bill_code varchar(255) NOT NULL,
@@ -129,27 +146,19 @@ CREATE TABLE bills (
     status ENUM('paid', 'unpaid') default 'paid',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (employee_id) REFERENCES employees(id),
     FOREIGN KEY (customer_id) REFERENCES customers(id),
     FOREIGN KEY (product_id) REFERENCES products(id)
 );
 
 -- procedure tự sinh code sản phẩm khi tạo mới -- 
 DELIMITER //
-
+drop procedure AddProductWithCode;
 CREATE PROCEDURE AddProductWithCode(
     IN product_name VARCHAR(255),
     IN product_description TEXT,
     IN product_price BIGINT,
     IN product_quantity INT,
-    IN cpu varchar(255),
-    IN ram varchar(255),
-    IN ssd varchar(255),
-    IN hdd varchar(255),
-    IN psu varchar(255),
-    IN mainboard varchar(255),
-    IN cases varchar(255),
-    IN heatsink varchar(255),
     IN product_category_id INT,
     IN product_brand_id INT,
     IN product_image VARCHAR(255)
@@ -172,8 +181,8 @@ BEGIN
     WHERE id = product_brand_id;
 
     -- Tạo mã sản phẩm dạng PREFIX_CATEGORY-PREFIX_BRAND-ID
-    INSERT INTO products (`name`,`description`, `price`, `quantity`,`cpu`,`ram`,`ssd`,`hdd`,`psu`,`mainboard`,`cases`,`heatsink`, `category_id`, `brand_id`, `image_url`)
-    VALUES (product_name,product_description, product_price, product_quantity,cpu,ram,ssd,hdd,psu,mainboard,cases,heatsink, product_category_id, product_brand_id,product_image);
+    INSERT INTO products (`name`,`description`, `price`, `quantity`, `category_id`, `brand_id`, `image_url`)
+    VALUES (product_name,product_description, product_price, product_quantity, product_category_id, product_brand_id,product_image);
 
     SET new_code = CONCAT(UCASE(prefix_category), '-', UCASE(prefix_brand), '-', LPAD(LAST_INSERT_ID(), 3, '0'));
 
@@ -184,7 +193,7 @@ BEGIN
 END //
 
 DELIMITER ;
-drop procedure AddProductWithCode;
+
 -- procedure tự sinh mã hoá đơn khi tạo
 DELIMITER $$
 
@@ -225,52 +234,36 @@ BEGIN
 END $$
 
 DELIMITER ;
+-- procedure tạo code cho nhà cung cấp
+DELIMITER //
 
+CREATE PROCEDURE InsertSupplier(
+    IN p_name VARCHAR(255),
+    IN p_phone VARCHAR(15),
+    IN p_address VARCHAR(255),
+    IN p_email VARCHAR(255),
+    IN p_company VARCHAR(255),
+    IN p_tax_code VARCHAR(15)
+)
+BEGIN
+    DECLARE new_code VARCHAR(255);
+    DECLARE max_number INT;
 
--- DML --
--- brand --
-insert into brands (`brand_name`) values("Dell");
-insert into brands (`brand_name`) values("Asus");
-insert into brands (`brand_name`) values("Lenovo");
-insert into brands (`brand_name`) values("Gigabyte");
-insert into brands (`brand_name`) values("Macbook");
-insert into brands (`brand_name`) values("HP");
-insert into brands (`brand_name`) values("Canon");
-insert into brands (`brand_name`) values("Epson");
-insert into brands (`brand_name`) values("Edifier");
-insert into brands (`brand_name`) values("Microsoft");
-insert into brands (`brand_name`) values("Imou");
-insert into brands (`brand_name`) values("Hikvision");
-insert into brands (`brand_name`) values("Tuya");
+    -- Lấy số lớn nhất từ supplier_code
+    SELECT COALESCE(MAX(CAST(SUBSTRING(supplier_code, 4) AS UNSIGNED)), 0) + 1
+    INTO max_number
+    FROM supplier;
 
--- categories --
-insert into categories (`category_name`) values("Laptop - Máy tính xách tay");
-insert into categories (`category_name`) values("PC - Máy tính để bàn");
-insert into categories (`category_name`) values("Camera Wifi - IP - Analog");
-insert into categories (`category_name`) values("SmartHome");
-insert into categories (`category_name`) values("Sound - Loa");
-insert into categories (`category_name`) values("Audio - Tai Nghe");
-insert into categories (`category_name`) values("Internet - Wifi - Lan");
-insert into categories (`category_name`) values("Printer - Máy in");
--- products --
-Call AddProductWithCode(
-	'Laptop asus',
-    'abc',
-    '1',
-    '12000000',
-    'Intel Core i5 10400',
-    '16GB',
-    '512GB',
-    '',
-    '120W',
-    '',
-    '',
-    '',
-    '1',
-    '2',
-    'asus.png'
-);
+    -- Tạo mã nhà cung cấp dạng NCC000001, NCC000010...
+    SET new_code = CONCAT('NCC', LPAD(max_number, LENGTH(max_number) + (6 - LENGTH(max_number)), '0'));
 
-insert into customers (`customer_name`, `address`, `phone`, `birth_day`) values ("Nguyễn Trọng Nghĩa", "Hà Nội", "0987654321", "2002-06-15"); 
+    -- Chèn dữ liệu mới vào bảng supplier
+    INSERT INTO supplier (supplier_code, name, phone, address, email, company, tax_code)
+    VALUES (new_code, p_name, p_phone, p_address, p_email, p_company, p_tax_code);
+END //
+
+DELIMITER ;
+ 
+
 
 

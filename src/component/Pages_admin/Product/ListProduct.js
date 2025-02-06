@@ -151,6 +151,7 @@ const columns = [
       <CustomModal
         hideModal={hideDetailModal}
         open={openDetailModal}
+        title = "Thông tin chi tiết sản phẩm"
         performAction={() => console.log()}
 >
   {selectedProduct ? (

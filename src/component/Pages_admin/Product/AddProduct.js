@@ -22,14 +22,6 @@ const AddProduct = () => {
     name: "",
     description: "",
     price: "",
-    cpu: "",
-    ram: "",
-    ssd: "",
-    hdd: "",
-    psu: "",
-    mainboard: "",
-    cases: "",
-    heatsink: "",
     quantity: "",
     category_id: "",
     brand_id: "",
@@ -51,26 +43,21 @@ const AddProduct = () => {
   // console.log(getProductId);
   useEffect(() => {
     // Kiểm tra nếu product.result tồn tại và là một mảng
-    // const productData = product?.[0] || {}; // Lấy phần tử đầu tiên hoặc để trống nếu không có phần tử
+    const productData = product?.[0] || {}; // Lấy phần tử đầu tiên hoặc để trống nếu không có phần tử
+    if(Object.keys(productData).length > 0){
       setFormValues({
-        id: product.id || "",
-        code: product.code || "",
-        name: product.name || "",
-        description: product.description || "",
-        price: product.price || "",
-        cpu: product.cpu || "",
-        ram: product.ram || "",
-        ssd: product.ssd || "",
-        hdd: product.hdd || "",
-        psu: product.psu || "",
-        mainboard: product.mainboard || "",
-        cases: product.cases || "",
-        heatsink: product.heatsink || "",
-        quantity: product.quantity || "",
-        category_id: product.category_id || "",
-        brand_id: product.brand_id || "",
-        image_url: product.image_url || "",
+        id: productData.id || "",
+        code: productData.code || "",
+        name: productData.name || "",
+        description: productData.description || "",
+        price: productData.price || "",
+        quantity: productData.quantity || "",
+        category_id: productData.category_id || "",
+        brand_id: productData.brand_id || "",
+        image_url: productData.image_url || "",
       });
+    }
+      
       console.log(formValues);
   }, [product]);
   
@@ -141,70 +128,6 @@ const AddProduct = () => {
           type="text"
           name="description"
           value={formValues.description}
-          onChg={handleInputChange}
-          className="form-control py-3 mb-3"
-        />
-        <span>CPU</span>
-        <CustomInput
-          type="text"
-          name="cpu"
-          value={formValues.cpu}
-          onChg={handleInputChange}
-          className="form-control py-3 mb-3"
-        />
-        <span>Mainboard</span>
-        <CustomInput
-          type="text"
-          name="mainboard"
-          value={formValues.mainboard}
-          onChg={handleInputChange}
-          className="form-control py-3 mb-3"
-        />
-        <span>SSD</span>
-        <CustomInput
-          type="text"
-          name="ssd"
-          value={formValues.ssd}
-          onChg={handleInputChange}
-          className="form-control py-3 mb-3"
-        />
-        <span>HDD</span>
-        <CustomInput
-          type="text"
-          name="hdd"
-          value={formValues.hdd}
-          onChg={handleInputChange}
-          className="form-control py-3 mb-3"
-        />
-        <span>PSU</span>
-        <CustomInput
-          type="text"
-          name="psu"
-          value={formValues.psu}
-          onChg={handleInputChange}
-          className="form-control py-3 mb-3"
-        />
-        <span>Ram</span>
-        <CustomInput
-          type="text"
-          name="ram"
-          value={formValues.ram}
-          onChg={handleInputChange}
-          className="form-control py-3 mb-3"
-        />
-        <span>Case</span>
-        <CustomInput
-          type="text"
-          name="cases"
-          value={formValues.cases}
-          onChg={handleInputChange}
-          className="form-control py-3 mb-3"
-        />
-        <span>Heatsink</span>
-        <CustomInput
-          type="text"
-          name="heatsink"
-          value={formValues.heatsink}
           onChg={handleInputChange}
           className="form-control py-3 mb-3"
         />
