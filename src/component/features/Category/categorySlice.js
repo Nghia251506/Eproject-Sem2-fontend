@@ -17,6 +17,18 @@ export const ListCategories = createAsyncThunk(
     }
   }
 );
+export const ClientListCategories = createAsyncThunk(
+  "api/list-category",
+  async (_,thunkAPI) => {
+    try {
+      const response = await categoryService.ClientListCategories();
+      // console.log(data);
+      return response;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
 
 // Thunk để thêm sản phẩm mới
 export const createCategory = createAsyncThunk(
@@ -67,7 +79,7 @@ export const updateACategory = createAsyncThunk(
 );
 
 // Action để reset trạng thái
-export const resetState = createAction("RevertAll");
+export const resetStateCategory = createAction("RevertAll");
 const initialState = {
   categories: [], // Danh sách loại sản phẩm
   category: null, // Chi tiết sản phẩm
@@ -95,6 +107,23 @@ export const categorySlice = createSlice({
         state.categories = action.payload;
       })
       .addCase(ListCategories.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.payload;
+      })
+
+      .addCase(ClientListCategories.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(ClientListCategories.fulfilled, (state, action) => {
+        // console.log(action.payload);
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.categories = action.payload;
+      })
+      .addCase(ClientListCategories.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
@@ -174,7 +203,7 @@ export const categorySlice = createSlice({
       })
 
       // Xử lý resetState
-      .addCase(resetState, () => initialState);
+      .addCase(resetStateCategory, () => initialState);
   },
 });
 

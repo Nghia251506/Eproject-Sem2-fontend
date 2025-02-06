@@ -2,22 +2,23 @@ import React,{useEffect} from 'react';
 import { Button, Dropdown, Space } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
 import _navigation from '../Asset/css/_navigation.module.css'
-import {ListCategories, resetState} from '../features/Category/categorySlice';
+import {ClientListCategories, resetStateCategory} from '../features/Category/categorySlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 const BottomLeft = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(resetState());
-    dispatch(ListCategories());
+    dispatch(resetStateCategory());
+    dispatch(ClientListCategories());
   }, [dispatch]);
 
   const categoryState = useSelector((state) => state.category.categories);
 
   const menuItems = categoryState.map((category) => ({
     key: category._id,
-    label: <a href={`/category/${category._id}`}>{category.category_name}</a>,
+    label: <Link to={`/${category.category_name}`}>{category.category_name}</Link>,
   }));
 
   return (

@@ -1,17 +1,18 @@
 import React from 'react';
 
 const CustomInput = (props) => {
-    const {type, i_id, onChg, onBlur, values, placeholder} = props;
+    const {type, onChg, onBlur,value, placeholder,name, readOnly, className} = props;
     return (
-        <div className="form-floating mb-3">
+        <div >
             <input
                 type = {type}
-                className = ""
-                id = {i_id}
+                name ={name}
                 placeholder = {placeholder}
                 onBlur = {onBlur}
-                values = {values}
+                value = {value}
                 onChange={onChg}
+                className = {className}
+                readOnly = {readOnly}
             />
         </div>
     );

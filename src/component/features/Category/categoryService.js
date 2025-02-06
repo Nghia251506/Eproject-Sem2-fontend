@@ -1,17 +1,23 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:4000/api"; // Thay đổi URL nếu backend của bạn dùng địa chỉ khác
+const API_URL = "http://tncom.ddns.net:3389"; // Thay đổi URL nếu backend của bạn dùng địa chỉ khác
 
 // Lấy danh sách sản phẩm
 const ListCategories = async () => {
-  const response = await axios.get(`${API_URL}/list-category`);
+  const response = await axios.get(`${API_URL}/admin/list-category`);
+  // console.log(response); 
+  return response.data; // Trả về dữ liệu JSON từ backend
+};
+
+const ClientListCategories = async () => {
+  const response = await axios.get(`${API_URL}`);
   // console.log(response); 
   return response.data; // Trả về dữ liệu JSON từ backend
 };
 
 // Tạo mới sản phẩm
 const createCategory = async (categoryData) => {
-  const response = await axios.post(`${API_URL}/add-category`, categoryData);
+  const response = await axios.post(`${API_URL}/admin/add-category`, categoryData);
   return response.data; // Trả về sản phẩm vừa tạo
 };
 
@@ -23,13 +29,13 @@ const getCategoryById = async (id) => {
 
 // Xóa sản phẩm theo ID
 const deleteCategory = async (id) => {
-  const response = await axios.delete(`${API_URL}/delete-category/${id}`);
+  const response = await axios.delete(`${API_URL}/admin/delete-category/${id}`);
   return response.data; // Trả về thông báo hoặc kết quả xóa
 };
 
 // Cập nhật sản phẩm
 const updateCategory = async (categoryData) => {
-  const response = await axios.put(`${API_URL}/update/${categoryData.id}`, categoryData);
+  const response = await axios.put(`${API_URL}/admin/update/${categoryData.id}`, categoryData);
   return response.data; // Trả về sản phẩm đã cập nhật
 };
 
@@ -40,6 +46,7 @@ const categoryService = {
   getCategoryById,
   deleteCategory,
   updateCategory,
+  ClientListCategories
 };
 
 export default categoryService;

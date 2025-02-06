@@ -4,7 +4,15 @@ import productService from "./productService";
 // Khởi tạo trạng thái ban đầu
 const initialState = {
   products: [], // Danh sách sản phẩm
-  product: null, // Chi tiết sản phẩm
+  product: { // Thay vì chỉ có mảng `products`, bạn cần chứa thông tin sản phẩm riêng biệt
+    name: '',
+    description: '',
+    price: '',
+    quantity: '',
+    category_id: '',
+    brand_id: '',
+    image_url: ''
+  }, // Chi tiết sản phẩm
   isLoading: false, // Trạng thái đang tải
   isError: false, // Có lỗi xảy ra
   isSuccess: false, // Hành động thành công
@@ -40,16 +48,77 @@ export const getAProduct = createAsyncThunk(
   "product/detail",
   async (id, thunkAPI) => {
     try {
-      return await productService.getProduct(id);
+      const result = await productService.getProduct(id);
+      // console.log(result);
+      return result;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
     }
   }
 );
 
+export const ClientProducts = createAsyncThunk(
+  "product/list-product",
+  async(_,thunkAPI) => {
+    try {
+      const result = await productService.fetchProducts();
+      return result;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
+    }
+  }
+)
+
+export const ClientProductDetail = createAsyncThunk(
+  "product/productdetail",
+  async(id,name, thunkAPI) => {
+    try{
+      const result = await productService.ProductDetail(name,id);
+      return result;
+    }catch(error){
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
+export const CreateProductDetail = createAsyncThunk(
+  "product/add-detail",
+  async (productData, thunkAPI) => {
+    try {
+      const result = await productService.CreateProductDetail(productData);
+      return result;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
+export const GetDetail = createAsyncThunk(
+  "getDetail",
+  async (productid, thunkAPI) => {
+    try {
+      return await productService.getDetail(productid);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
+export const getProductByCategory = createAsyncThunk(
+  "getProductByCategory",
+  async (category_id, thunkAPI) => {
+    try{
+      return await productService.getProductByCategory(category_id);
+    }catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
+  
+  }
+}
+);
+
 // Thunk để xóa sản phẩm
 export const deleteAProduct = createAsyncThunk(
-  "api/delete",
+  "product/delete",
   async (id, thunkAPI) => {
     try {
       return await productService.deleteProduct(id);
@@ -62,14 +131,27 @@ export const deleteAProduct = createAsyncThunk(
 // Thunk để cập nhật sản phẩm
 export const updateAProduct = createAsyncThunk(
   "product/update",
-  async (productData, thunkAPI) => {
+  async ({id,productData}, thunkAPI) => {
     try {
-      return await productService.updateProduct(productData);
+      const result =  await productService.updateProduct(id,productData);
+      return result;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
     }
   }
 );
+
+export const getProductByCode = createAsyncThunk(
+  "product/getProductByCode",
+  async (code, thunkAPI) => {
+    try {
+      const result = await productService.getProductByCode(code);
+      return result;
+    }catch (error){
+      return thunkAPI.rejectWithValue(error.response?.data || error.message)
+    }
+  }
+)
 
 // Action để reset trạng thái
 export const resetState = createAction("product/reset-state");
@@ -114,11 +196,49 @@ export const productSlice = createSlice({
         state.message = action.payload;
       })
 
+      // Xử lý createProductDetail
+      .addCase(CreateProductDetail.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(CreateProductDetail.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.products.push(action.payload);
+      })
+      .addCase(CreateProductDetail.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.payload;
+      })
+
+      // Xử lý getDetail
+      .addCase(GetDetail.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(GetDetail.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.product = action.payload;
+      })
+      .addCase(GetDetail.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.payload;
+      })
+
+      // Xử lý getProductByCategory
+      
+
       // Xử lý getAProduct
       .addCase(getAProduct.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(getAProduct.fulfilled, (state, action) => {
+        // console.log('Product from getAProduct:', action.payload);
         state.isLoading = false;
         state.isError = false;
         state.isSuccess = true;
@@ -129,6 +249,75 @@ export const productSlice = createSlice({
         state.isError = true;
         state.isSuccess = false;
         state.message = action.payload;
+      })
+      // Xử lý state Detail
+      .addCase(ClientProductDetail.pending, (state) =>{
+        state.isLoading = true;
+      })
+
+      .addCase(ClientProductDetail.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.product = action.payload;
+      })
+
+      .addCase(ClientProductDetail.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.payload;
+      })
+
+      // Xử lý Client list product
+      .addCase(ClientProducts.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(ClientProducts.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.products = action.payload;
+      })
+      .addCase(ClientProducts.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.payload;
+      })
+
+      // Xử lý updateAProduct
+
+      .addCase(getProductByCategory.pending, (state) =>{
+        state.isLoading = true;
+      })
+
+      .addCase(getProductByCategory.fulfilled, (state, action) =>{
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.products = action.payload;
+      })
+
+      .addCase(getProductByCategory.rejected, (state, action) =>{
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.payload;
+      })
+
+      // Xử lý getProductByCode
+      .addCase(getProductByCode.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getProductByCode.fulfilled, (state, action) => {
+        state.loading = false;
+        state.products.push(action.payload); // Thêm sản phẩm vào danh sách
+      })
+      .addCase(getProductByCode.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       })
 
       // Xử lý deleteAProduct
@@ -158,10 +347,16 @@ export const productSlice = createSlice({
         state.isLoading = false;
         state.isError = false;
         state.isSuccess = true;
-        state.products = state.products.map((product) =>
-          product.id === action.payload.id ? action.payload : product
-        );
+      
+        if (state.products && action.payload?.id) {
+          state.products = state.products.map((product) =>
+            product.id === action.payload.id ? action.payload : product
+          );
+        } else {
+          console.error("Không tìm thấy sản phẩm hoặc payload không hợp lệ.");
+        }
       })
+      
       .addCase(updateAProduct.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;

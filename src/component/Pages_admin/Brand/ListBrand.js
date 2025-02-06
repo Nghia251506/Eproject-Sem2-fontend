@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   deleteABrand,
   getBrands,
-  resetState,
+  resetStateBrand,
 } from "../../features/Band/brandSlice";
 import CustomModal from "../../DataEntry/Modal/CustomModal";
 
@@ -40,7 +40,7 @@ const Brandlist = () => {
   };
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(resetState());
+    dispatch(resetStateBrand());
     dispatch(getBrands());
   }, [dispatch]);
   const brandState = useSelector((state) => state.brand.brands);
