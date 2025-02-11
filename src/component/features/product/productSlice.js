@@ -12,7 +12,13 @@ const initialState = {
     category_id: '',
     brand_id: '',
     image_url: ''
-  }, // Chi tiết sản phẩm
+  }, 
+  productDetail: {
+    product_id: '',
+    attribute_id: '',
+    val: '',
+    suppilier_id:''
+  },// chi tiết sản phẩm
   isLoading: false, // Trạng thái đang tải
   isError: false, // Có lỗi xảy ra
   isSuccess: false, // Hành động thành công
@@ -51,6 +57,53 @@ export const getAProduct = createAsyncThunk(
       const result = await productService.getProduct(id);
       // console.log(result);
       return result;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
+export const ClientProducts = createAsyncThunk(
+  "product/list-product",
+  async(_,thunkAPI) => {
+    try {
+      const result = await productService.fetchProducts();
+      return result;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
+    }
+  }
+)
+
+export const ClientProductDetail = createAsyncThunk(
+  "product/productdetail",
+  async(id,name, thunkAPI) => {
+    try{
+      const result = await productService.ProductDetail(name,id);
+      return result;
+    }catch(error){
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
+export const CreateProductDetail = createAsyncThunk(
+  "product/add-detail",
+  async (productData, thunkAPI) => {
+    try {
+      const result = await productService.CreateProductDetail(productData);
+      return result;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
+export const GetDetail = createAsyncThunk(
+  "getDetail",
+  async (productid, thunkAPI) => {
+    try {
+      return await productService.getDetail(productid);
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
     }
@@ -149,6 +202,43 @@ export const productSlice = createSlice({
         state.message = action.payload;
       })
 
+      // Xử lý createProductDetail
+      .addCase(CreateProductDetail.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(CreateProductDetail.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.products.push(action.payload);
+      })
+      .addCase(CreateProductDetail.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.payload;
+      })
+
+      // Xử lý getDetail
+      .addCase(GetDetail.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(GetDetail.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.product = action.payload;
+      })
+      .addCase(GetDetail.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.payload;
+      })
+
+      // Xử lý getProductByCategory
+      
+
       // Xử lý getAProduct
       .addCase(getAProduct.pending, (state) => {
         state.isLoading = true;
@@ -166,6 +256,43 @@ export const productSlice = createSlice({
         state.isSuccess = false;
         state.message = action.payload;
       })
+      // Xử lý state Detail
+      .addCase(ClientProductDetail.pending, (state) =>{
+        state.isLoading = true;
+      })
+
+      .addCase(ClientProductDetail.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.product = action.payload;
+      })
+
+      .addCase(ClientProductDetail.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.payload;
+      })
+
+      // Xử lý Client list product
+      .addCase(ClientProducts.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(ClientProducts.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.products = action.payload;
+      })
+      .addCase(ClientProducts.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.payload;
+      })
+
+      // Xử lý updateAProduct
 
       .addCase(getProductByCategory.pending, (state) =>{
         state.isLoading = true;

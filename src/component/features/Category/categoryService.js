@@ -10,7 +10,7 @@ const ListCategories = async () => {
 };
 
 const ClientListCategories = async () => {
-  const response = await axios.get(`${API_URL}/api/list-category`);
+  const response = await axios.get(`${API_URL}`);
   // console.log(response); 
   return response.data; // Trả về dữ liệu JSON từ backend
 };

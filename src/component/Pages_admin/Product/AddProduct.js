@@ -44,8 +44,7 @@ const AddProduct = () => {
   useEffect(() => {
     // Kiểm tra nếu product.result tồn tại và là một mảng
     const productData = product?.[0] || {}; // Lấy phần tử đầu tiên hoặc để trống nếu không có phần tử
-  
-    if (Object.keys(productData).length > 0) {
+    if(Object.keys(productData).length > 0){
       setFormValues({
         id: productData.id || "",
         code: productData.code || "",
@@ -57,8 +56,9 @@ const AddProduct = () => {
         brand_id: productData.brand_id || "",
         image_url: productData.image_url || "",
       });
-      console.log(formValues);
     }
+      
+      console.log(formValues);
   }, [product]);
   
   

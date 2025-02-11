@@ -1,16 +1,25 @@
-create database TNC;
+-- create database TNC;
 
-use TNC;
+use TNC; 
 
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
     phone VARCHAR(15),
-    address TEXT,
-    role ENUM('admin', 'customer') DEFAULT 'customer',
+    role ENUM('customer') DEFAULT 'customer',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE employees(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255),
+    password VARCHAR(255),
+    email VARCHAR(255),
+    phone VARCHAR(255),
+    role ENUM ('employee') DEFAULT 'employee',
+    create_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE categories (
@@ -20,21 +29,39 @@ CREATE TABLE categories (
 );
 
 
-
 CREATE TABLE brands (
     id INT AUTO_INCREMENT PRIMARY KEY,
     brand_name VARCHAR(50) UNIQUE NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE attributes(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE,
+    create_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE suppliers(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    supplier_code VARCHAR(255),
+    name VARCHAR(255),
+    phone VARCHAR(15),
+    address VARCHAR(255),
+    email VARCHAR(255),
+    conpany VARCHAR(255),
+    tax_code VARCHAR(15),
+    create_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    update_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE products (
     id INT AUTO_INCREMENT PRIMARY KEY,
     code VARCHAR(255),
     name VARCHAR(255) NOT NULL,
-    description TEXT,
+    description LONGTEXT,
     price BIGINT NOT NULL,
     quantity INT DEFAULT 0,
-    category_id INT,
+    category_id int not null,
     brand_id INT,
     image_url VARCHAR(255),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -43,25 +70,27 @@ CREATE TABLE products (
     FOREIGN KEY (brand_id) REFERENCES brands(id)
 );
 
+CREATE TABLE product_detail(
+	id int auto_increment not null primary key,
+    product_id int not null,
+    attribute_id int not null,
+    val varchar(255),
+    supplier_id int,
+    FOREIGN KEY (product_id) REFERENCES products(id),
+    FOREIGN KEY (attribute_id) REFERENCES attributes(id),
+    FOREIGN KEY (supplier_id) REFERENCES suppliers(id)
+);
 
 
 CREATE TABLE orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
-    total_price DECIMAL(10, 2) NOT NULL,
+    product_id INT NOT NULL,
+    total_price BIGINT NOT NULL,
     status ENUM('pending', 'completed', 'cancelled') DEFAULT 'pending',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id)
-);
-
-CREATE TABLE order_details (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    order_id INT NOT NULL,
-    product_id INT NOT NULL,
-    quantity INT NOT NULL,
-    price DECIMAL(10, 2) NOT NULL,
-    FOREIGN KEY (order_id) REFERENCES orders(id),
+    FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (product_id) REFERENCES products(id)
 );
 
@@ -70,7 +99,7 @@ CREATE TABLE reviews (
     product_id INT NOT NULL,
     user_id INT NOT NULL,
     rating INT CHECK (rating BETWEEN 1 AND 5),
-    comment TEXT,
+    comment LONGTEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (product_id) REFERENCES products(id),
     FOREIGN KEY (user_id) REFERENCES users(id)
@@ -79,8 +108,9 @@ CREATE TABLE reviews (
 CREATE TABLE customers (
     id INT AUTO_INCREMENT PRIMARY KEY,
     customer_name varchar(255) NOT NULL,
-    address text NOT NULL,
-    phone varchar(15) NOT NULL,
+    address varchar(255),
+    phone varchar(15),
+    email varchar(255),
     birth_day DATE
 );
 
@@ -105,59 +135,25 @@ CREATE TABLE cart (
     FOREIGN KEY (product_id) REFERENCES products(id)
 );
 
-CREATE TABLE logs (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    admin_id INT NOT NULL,
-    action TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (admin_id) REFERENCES admins(id)
-);
-
-CREATE TABLE banners (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    image_url VARCHAR(255) NOT NULL,
-    link_url VARCHAR(255),
-    status ENUM('active', 'inactive') DEFAULT 'active',
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
-
-CREATE TABLE settings (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    key_name VARCHAR(50) NOT NULL,
-    value TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP
-);
-
 CREATE TABLE bills (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    customer_id INT NOT NULL,  
+    employee_id INT NOT NULL,
+    customer_id INT NOT NULL,
+    product_id INT NOT NULL,
     bill_code varchar(255) NOT NULL,
     total_price BIGINT NOT NULL,
     payment_method ENUM('cash', 'credit_card', 'online') DEFAULT 'cash', -- Phương thức thanh toán
-    status ENUM('paid', 'unpaid'),
+    status ENUM('paid', 'unpaid') default 'paid',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (customer_id) REFERENCES customers(id)
-);
-
-CREATE TABLE bill_details (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    bill_id INT NOT NULL,
-    product_id INT NOT NULL,
-    quantity INT NOT NULL,
-    price BIGINT NOT NULL, -- Giá tại thời điểm bán
-    FOREIGN KEY (bill_id) REFERENCES bills(id),
+    FOREIGN KEY (employee_id) REFERENCES employees(id),
+    FOREIGN KEY (customer_id) REFERENCES customers(id),
     FOREIGN KEY (product_id) REFERENCES products(id)
 );
 
-
 -- procedure tự sinh code sản phẩm khi tạo mới -- 
 DELIMITER //
-
+drop procedure AddProductWithCode;
 CREATE PROCEDURE AddProductWithCode(
     IN product_name VARCHAR(255),
     IN product_description TEXT,
@@ -197,12 +193,14 @@ BEGIN
 END //
 
 DELIMITER ;
+
 -- procedure tự sinh mã hoá đơn khi tạo
 DELIMITER $$
 
 CREATE PROCEDURE createBill(
     IN p_user_id INT,
     IN p_customer_id INT,
+    IN p_product_id INT,
     IN p_total_price BIGINT,
     IN p_payment_method ENUM('cash', 'credit_card', 'online'),
     IN p_status ENUM('paid', 'unpaid')
@@ -225,8 +223,8 @@ BEGIN
     SET bill_code = CONCAT('HD', currentDate, '-', LPAD(bill_count + 1, 3, '0'));
 
     -- Tạo hóa đơn mới
-    INSERT INTO bills (user_id, customer_id, bill_code, total_price, payment_method, status, created_at, updated_at)
-    VALUES (p_user_id, p_customer_id, bill_code, p_total_price, p_payment_method, p_status, NOW(), NOW());
+    INSERT INTO bills (user_id, customer_id, product_id, bill_code, total_price, payment_method, status, created_at, updated_at)
+    VALUES (p_user_id, p_customer_id,p_product_id, bill_code, p_total_price, p_payment_method, p_status, NOW(), NOW());
 
     -- Lấy ID của hóa đơn vừa tạo
     SET new_bill_id = LAST_INSERT_ID();
@@ -236,73 +234,36 @@ BEGIN
 END $$
 
 DELIMITER ;
+-- procedure tạo code cho nhà cung cấp
+DELIMITER //
 
+CREATE PROCEDURE InsertSupplier(
+    IN p_name VARCHAR(255),
+    IN p_phone VARCHAR(15),
+    IN p_address VARCHAR(255),
+    IN p_email VARCHAR(255),
+    IN p_company VARCHAR(255),
+    IN p_tax_code VARCHAR(15)
+)
+BEGIN
+    DECLARE new_code VARCHAR(255);
+    DECLARE max_number INT;
 
+    -- Lấy số lớn nhất từ supplier_code
+    SELECT COALESCE(MAX(CAST(SUBSTRING(supplier_code, 4) AS UNSIGNED)), 0) + 1
+    INTO max_number
+    FROM supplier;
 
--- DML
+    -- Tạo mã nhà cung cấp dạng NCC000001, NCC000010...
+    SET new_code = CONCAT('NCC', LPAD(max_number, LENGTH(max_number) + (6 - LENGTH(max_number)), '0'));
 
-alter table products add column name varchar(255) NOT NULL after code;
-alter table products drop column product_name ;
+    -- Chèn dữ liệu mới vào bảng supplier
+    INSERT INTO supplier (supplier_code, name, phone, address, email, company, tax_code)
+    VALUES (new_code, p_name, p_phone, p_address, p_email, p_company, p_tax_code);
+END //
 
-drop procedure AddProductWithCode;
-
-
--- DML --
--- brand --
-insert into brands (`brand_name`) values("Dell");
-insert into brands (`brand_name`) values("Asus");
-insert into brands (`brand_name`) values("Lenovo");
-insert into brands (`brand_name`) values("Gigabyte");
-insert into brands (`brand_name`) values("Macbook");
-insert into brands (`brand_name`) values("HP");
-
--- categories --
-insert into categories (`category_name`) values("Laptop Văn Phòng");
-insert into categories (`category_name`) values("Laptop Gaming");
-insert into categories (`category_name`) values("PC Văn Phòng");
-insert into categories (`category_name`) values("PC Gaming");
-insert into categories (`category_name`) values("PC Workstation");
-insert into categories (`category_name`) values("Camera Wifi - IP");
-insert into categories (`category_name`) values("SmartHome");
-insert into categories (`category_name`) values("Loa");
-insert into categories (`category_name`) values("Audio - Tai Nghe");
-insert into categories (`category_name`) values("Internet - Wifi - Lan");
-insert into categories (`category_name`) values("Printer - Máy in");
-
--- products --
-
-CALL AddProductWithCode(
-    'Laptop Dell XPS', 
-    'Máy tính xách tay hiệu suất cao', 
-    25000000, 
-    10, 
-    1, 
-    1, 
-    'dell_xps_image.png'
-);
-
-CALL AddProductWithCode(
-    'Laptop Asus TUF F15', 
-    'Máy tính xách tay GAMING hiệu suất cao', 
-    30000000, 
-    10, 
-    2, 
-    2, 
-    'Asus_tuf.png'
-);
-
-CALL AddProductWithCode(
-    'Laptop Dell PRECITION', 
-    'Máy tính xách tay WORKSTATION hiệu suất cao', 
-    25000000, 
-    10, 
-    2, 
-    1, 
-    'dell_xps_image.png'
-);
-
-insert into customers (`customer_name`, `address`, `phone`, `birth_day`) values ("Nguyễn Trọng Nghĩa", "Hà Nội", "0987654321", "2002-06-15");
-
+DELIMITER ;
+ 
 
 
 
