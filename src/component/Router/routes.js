@@ -16,6 +16,8 @@ import ListBill from '../Pages_admin/Bill/ListBill'
 import ListCustomer from '../Pages_admin/Customer/ListCustomer'
 import ProductDetail from '../Page_Client/Product/ProductDetail';
 import ListProductByCategory from '../Page_Client/Product/ListProductByCategory'
+import CartProduct from '../Page_Client/cart/cart'
+import Payment from '../Page_Client/cart/payment'
 const routes = [
     { path: "/login", component: Login},
     { path: "/forgotpassword", component: ForgotPassword},
@@ -26,6 +28,8 @@ const routes = [
             {path:"/", component: Home},
             {path:"/:name/:id", component: ProductDetail},
             {path:"/:category_name", component: ListProductByCategory},
+            {path:"/cart-product", component: CartProduct},
+            {path:"/payment", component: Payment}
         ],
     },
     {
