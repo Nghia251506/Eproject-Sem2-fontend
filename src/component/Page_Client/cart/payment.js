@@ -14,6 +14,7 @@ function Payment() {
     });
 
     const [isChecked, setIsChecked] = useState(false);
+    const [selectedValue, setSelectedValue] = useState("option1");
   
     const handleChange = (e) => {
       setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -79,20 +80,52 @@ function Payment() {
                                     required
                                 />
                             </div>
+                            <div className="form-group">
+                                <label style={{display: 'Flex', margin: '20px 0px'}}>
+                                    <Input
+                                        style={{width: '10%'}}
+                                        type="radio"
+                                        value="option1"
+                                        checked={selectedValue === "option1"}
+                                        onChange={(e) => setSelectedValue(e.target.value)}
+                                        required
+                                    />
+                                    <span style={{width: '70%'}}>Quét mã QR</span>
+                                </label> 
+                            </div>
+                            <div className="form-group">
+                                <label style={{display: 'flex'}}>
+                                <Input
+                                    type="radio"
+                                    style={{width: '10%'}}
+                                    value="option2"
+                                    checked={selectedValue === "option2"}
+                                    onChange={(e) => setSelectedValue(e.target.value)}
+                                    required
+                                />
+                                    <span>Thanh toán khi nhận hàng</span>
+                                </label>
+                                
+                            </div>
                             <br />
-                            <input
-                            type="checkbox"
-                            checked={isChecked}
-                            onChange={(e) => setIsChecked(e.target.checked)}
-                            className="w-4 h-4"
-                            />
-                            <span>Tôi đồng ý với điều khoản</span>
-                            <br />
-                            <button  onClick={handleSubmit}
+                           <div style={{display: 'flex', justifyContent: 'center'}}>
+                            <Input
+                                type="checkbox"
+                                checked={isChecked}
+                                style={{width: '10%'}}
+                                onChange={(e) => setIsChecked(e.target.checked)}
+                                className="w-4 h-4"
+                                />
+                                <span>Tôi đồng ý với điều khoản</span>
+                           </div>
+                            <div style={{display: 'flex', justifyContent: 'center'}}>
+                                <button  onClick={handleSubmit}
                                 disabled={!isChecked}
-                                className={`px-4 py-2 rounded-lg text-white ${
+                                style={{marginTop: '20px', borderRadius: '15px'}}
+                                className={`px-4 py-2 rounded-lg text-blue ${
                                 isChecked ? "bg-blue-500 hover:bg-blue-700" : "bg-gray-300 cursor-not-allowed"
                                 }`} type="submit">Submit</button>
+                            </div>
                         </form>
                     </div>
                 </div>
