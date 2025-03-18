@@ -4,6 +4,7 @@ import _container from '../../Asset/css/_container.module.css'
 import _payment from '../../Asset/css/_payment.module.css'
 import _home from '../../Asset/css/_home.module.css';
 import _footer from '../../Asset/css/_footer.module.css';
+import { Input } from 'antd';
 
 
 function Payment() {
@@ -27,22 +28,57 @@ function Payment() {
     return (
         <div className={_home.product_container}>
             <div className={_container.container}>
-                <h3 >Danh sách sản phẩm</h3>
+                <h3 >Thông tin</h3>
             </div>
             
             <div style={{ width: '100%', height: '100%', marginBottom: '20px'}}>
                 <div className={_container.container}>
-                    <div className={_footer.footer_container} style={{width: '100%'}}>
+                    <div className={_payment.payment_container} style={{width: '100% !important'}}>
                         <form onSubmit={handleSubmit}>
-                            <label>
-                            Name: 
-                            </label>
-                            <input className={_payment.input} type="text" name="name" value={formData.name} onChange={handleChange} />
-                            <br />
-                            <label>
-                            Email: 
-                            </label>
-                            <input type="email" name="email" value={formData.email} onChange={handleChange} />
+                            <div className="form-group">
+                                <label htmlFor="name">Tên của bạn:</label>
+                                <Input
+                                    type="text"
+                                    id="name"
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="email">Email:</label>
+                                <Input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="phone">Điện thoại:</label>
+                                <Input
+                                    type="phone"
+                                    id="phone"
+                                    name="phone"
+                                    value={formData.phone}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="address">Địa chỉ:</label>
+                                <Input
+                                    type="text"
+                                    id="address"
+                                    name="address"
+                                    value={formData.address}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
                             <br />
                             <input
                             type="checkbox"

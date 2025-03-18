@@ -2,8 +2,20 @@ import _home from '../../Asset/css/_home.module.css';
 import _header from '../../Asset/css/_header.module.css';
 import _footer from '../../Asset/css/_footer.module.css';
 import _container from '../../Asset/css/_container.module.css'
+import React, { useState } from 'react';
 
 const CartProduct = () => {
+    
+    const [cart, setCart] = useState([
+        { id: 1, name: 'Sản phẩm 1', price: 100, src: 'https://hanoicomputercdn.com/media/product/87738_84781_vo_case_xigmatek_fly_ii_3gf_en44663_atx_mid_tower_mau_den_3_fan_vo_cuc__2_.jpg' },
+        { id: 2, name: 'Sản phẩm 2', price: 200, src:'https://hanoicomputercdn.com/media/product/87738_84781_vo_case_xigmatek_fly_ii_3gf_en44663_atx_mid_tower_mau_den_3_fan_vo_cuc__2_.jpg' },
+        { id: 3, name: 'Sản phẩm 3', price: 300, src:'https://hanoicomputercdn.com/media/product/87738_84781_vo_case_xigmatek_fly_ii_3gf_en44663_atx_mid_tower_mau_den_3_fan_vo_cuc__2_.jpg' },
+      ]);
+    
+    const removeFromCart = (id) => {
+    setCart(cart.filter(item => item.id !== id)); // Xóa sản phẩm có id tương ứng
+    };
+
     return (
         <div className={_home.product_container}>
             <div className={_container.container}>
@@ -12,19 +24,24 @@ const CartProduct = () => {
             
             <div style={{ width: '100%', height: '100%', marginBottom: '20px'}}>
                 <div className={_container.container}>
-                    <div className={_footer.footer_container} style={{ marginBottom: '20px', border: '1px solid #090635', borderRadius: '15px'}}>
-                        <div className={_header.logo_container}>
-                            <img className={_header.logo} src='https://hanoicomputercdn.com/media/product/87738_84781_vo_case_xigmatek_fly_ii_3gf_en44663_atx_mid_tower_mau_den_3_fan_vo_cuc__2_.jpg' alt=''/>
-                        </div>
-                            <div>
-                                <b>Tên sản phẩm</b>
+                    {cart.map((item) => (
+                        <div className={_footer.footer_container} style={{ marginBottom: '20px', border: '1px solid #090635', borderRadius: '15px'}}>
+                            <div className={_header.logo_container}>
+                                <img className={_header.logo} src={item.src} alt=''/>
                             </div>
-                        <div className="d-flex align-items-center gap-1" style={{marginRight: '10px'}}>
-                            <b>100.000.000 đ</b>
+                                <div>
+                                    <b>{item.name}</b>
+                                </div>
+                            <div className="d-flex align-items-center gap-1" style={{marginRight: '10px'}}>
+                                <b>{item.price} Vnđ</b>
+                            </div>
+                            <div>
+                                <button onClick={() => removeFromCart(item.id)}>Xóa</button>
+                            </div>
                         </div>
-                    </div>
+                    ))}
                     <div>
-                        <h4>Tổng tiền: 100.000.000 đ</h4>
+                        <h4>Tổng tiền: {cart.reduce((total, item) => total + item.price, 0)} VNĐ</h4>
                     </div>
                     <div>
                         <a href='/payment' className={_footer.footer_payment_button}>Thanh toán</a>
