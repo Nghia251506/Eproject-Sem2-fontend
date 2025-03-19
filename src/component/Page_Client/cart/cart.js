@@ -13,10 +13,10 @@ const CartProduct = () => {
     //     { id: 3, name: 'Sản phẩm 3',quanity: 3, price: 300, src:'https://hanoicomputercdn.com/media/product/87738_84781_vo_case_xigmatek_fly_ii_3gf_en44663_atx_mid_tower_mau_den_3_fan_vo_cuc__2_.jpg' },
     //   ]);
     
-    const { cart, setCart } = useCart();
+    const cart  = useCart() || [];
 
     const removeFromCart = (id) => {
-        setCart(cart.filter(item => item.id !== id)); // Xóa sản phẩm có id tương ứng
+        // setCart(cart.filter(item => item.id !== id)); // Xóa sản phẩm có id tương ứng
     };
 
     return (
