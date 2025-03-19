@@ -112,8 +112,8 @@ const handleSupplierChange = (e) => {
 };
 
 // Xử lý gửi form
-const handleSubmit = async (e) => {
-  e.preventDefault();
+const handleSubmit = async (event) => {
+  event.preventDefault();
   dispatch(createDetail(formValues));
   toast.success("Thêm chi tiết sản phẩm thành công!");
 };
@@ -134,9 +134,12 @@ const addSupplier = () => {
       : text;
   };
   const data1 = productState?.map((product, index) => ({
-    key: index + 1,
+    key: index +1,
+    id: product?.id || "N/A",
     code: product?.code || "N/A",
     name: product?.name || "N/A",
+    brand_name: product?.brand_name || "N/A",
+    category_name: product?.category_name || "N/A", // Lấy tên loại sản phẩm
     created_at: product?.created_at || "N/A", // Lấy tên loại sản phẩm
     stock: product?.stock || 0,
     sell_price: product?.sell_price || 0,
@@ -157,6 +160,7 @@ const addSupplier = () => {
       </>
     ) : null,
   }));
+  console.log(productState)
 
   const showDetailModal = (product) => {
     setSelectedProduct(product); // Lưu thông tin sản phẩm được chọn
@@ -191,8 +195,8 @@ const addSupplier = () => {
   const detailData = detail?.[0] || {};
     if(Object.keys(detailData).length > 0){
       setFormValues(detailData.attributes.map((attr) => ({
-        product_id: detailData.id,
-        attribute_id: detailData.attribute_id,
+        product_id: productState.id,
+        attribute_id: attr.attribute_id,
         val: attr.val,
         supplier_id: detailData.supplier_id
       })));
@@ -200,6 +204,22 @@ const addSupplier = () => {
       setSuppliers(detailData.suppliers);
     }
  }
+
+ useEffect(() => {
+  if (openDetailModal) {
+    CreateDetailProduct(); // Chạy khi modal mở
+  }
+}, [openDetailModal]);
+
+useEffect(() => {
+  if (selectedProduct) {
+    setFormValues(prevValues => ({
+      ...prevValues,
+      product_id: selectedProduct.id
+    }));
+  }
+}, [selectedProduct]);
+
 
   useEffect(()=>{
     dispatch(resetStateAttribute());
@@ -210,6 +230,7 @@ const addSupplier = () => {
     dispatch(resetState());
     dispatch(getProducts());
   }, [dispatch]);
+  console.log(selectedProduct)
 
   return (
     <div>
@@ -222,7 +243,7 @@ const addSupplier = () => {
       <CustomModal
   hideModal={hideDetailModal}
   open={openDetailModal}
-  performAction = {() => CreateDetailProduct()}
+  performAction = {(event) =>handleSubmit(event)}
   title="Thông tin chi tiết sản phẩm"
 >
   {selectedProduct ? (
@@ -232,21 +253,33 @@ const addSupplier = () => {
         <p><strong>ID Sản Phẩm:</strong> {selectedProduct.id}</p>
         <p><strong>Mã Sản Phẩm:</strong> {selectedProduct.code}</p>
         <p><strong>Tên Sản Phẩm:</strong> {selectedProduct.name}</p>
-        <p><strong>Thương Hiệu:</strong> {selectedProduct.brand}</p>
-        <p><strong>Loại Sản Phẩm:</strong> {selectedProduct.category}</p>
+        <p><strong>Thương Hiệu:</strong> {selectedProduct.brand_name}</p>
+        <p><strong>Loại Sản Phẩm:</strong> {selectedProduct.category_name}</p>
         <p><strong>Tồn Kho:</strong> {selectedProduct.stock}</p>
         <p><strong>Giá:</strong> {Number(selectedProduct.sell_price).toLocaleString("vi-VN")} VND</p>
       </div>
 
       {/* Cột bên phải - Thêm Attributes & Supplier */}
       <form onSubmit={handleSubmit}>
+      <CustomInput
+              type="text"
+              placeholder="Id sản phẩm"
+              name="product_id"
+              value={formValues.product_id}
+              onChg={handleValueChange}
+              style={{ flex: "3" }}
+              readOnly = {true}
+            />
       <div style={{ flex: "1" }}>
         {/* Thêm Attributes */}
         <label><strong>Thêm Attributes:</strong></label>
         
           <div  style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
             <select
-              
+              name="attribute_id"
+          value={formValues.attribute_id}
+          onChange={handleValueChange}
+          
             >
               <option value="">Chọn Attribute</option>
               {attributeState.map((attr) => (
@@ -264,7 +297,7 @@ const addSupplier = () => {
             <button style={{ color: "red", border: "none", background: "none" }}>❌</button>
           </div>
         
-        <button  style={{ marginTop: "5px" }}>➕ Thêm Attribute</button>
+        {/* <button  style={{ marginTop: "5px" }}>➕ Thêm Attribute</button> */}
         <br></br>
         {/* Thêm Supplier */}
         <label><strong>Chọn Supplier:</strong></label>

@@ -14,12 +14,6 @@ const initialState = {
     brand_id: '',
     image_url: ''
   }, 
-  productDetail: {
-    product_id: '',
-    attribute_id: '',
-    val: '',
-    suppilier_id:''
-  },// chi tiết sản phẩm
   isLoading: false, // Trạng thái đang tải
   isError: false, // Có lỗi xảy ra
   isSuccess: false, // Hành động thành công
