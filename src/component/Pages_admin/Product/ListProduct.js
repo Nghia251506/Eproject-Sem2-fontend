@@ -37,11 +37,11 @@ const columns = [
   },
   {
     title: "Tồn kho",
-    dataIndex: "quantity",
+    dataIndex: "stock",
   },
   {
-    title: "Giá (VND)",
-    dataIndex: "price",
+    title: "Giá Bán (VND)",
+    dataIndex: "sell_price",
     sorter: (a, b) => a.price - b.price,
     render: (price) => Number(price).toLocaleString("vi-VN"),
   },
@@ -138,8 +138,8 @@ const addSupplier = () => {
     code: product?.code || "N/A",
     name: product?.name || "N/A",
     created_at: product?.created_at || "N/A", // Lấy tên loại sản phẩm
-    quantity: product?.quantity || 0,
-    price: product?.price || 0,
+    stock: product?.stock || 0,
+    sell_price: product?.sell_price || 0,
     action: product?.id ? (
       <>
         <Link
@@ -229,12 +229,13 @@ const addSupplier = () => {
     <div >
       {/* Cột bên trái - Thông tin sản phẩm */}
       <div style={{ flex: "1" }}>
+        <p><strong>ID Sản Phẩm:</strong> {selectedProduct.id}</p>
         <p><strong>Mã Sản Phẩm:</strong> {selectedProduct.code}</p>
         <p><strong>Tên Sản Phẩm:</strong> {selectedProduct.name}</p>
         <p><strong>Thương Hiệu:</strong> {selectedProduct.brand}</p>
         <p><strong>Loại Sản Phẩm:</strong> {selectedProduct.category}</p>
-        <p><strong>Tồn Kho:</strong> {selectedProduct.quantity}</p>
-        <p><strong>Giá:</strong> {Number(selectedProduct.price).toLocaleString("vi-VN")} VND</p>
+        <p><strong>Tồn Kho:</strong> {selectedProduct.stock}</p>
+        <p><strong>Giá:</strong> {Number(selectedProduct.sell_price).toLocaleString("vi-VN")} VND</p>
       </div>
 
       {/* Cột bên phải - Thêm Attributes & Supplier */}

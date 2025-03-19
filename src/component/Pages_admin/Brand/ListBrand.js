@@ -44,7 +44,7 @@ const Brandlist = () => {
     dispatch(getBrands());
   }, [dispatch]);
   const brandState = useSelector((state) => state.brand.brands);
-  // console.log(brandState);
+  console.log(brandState);
   const data1 = [];
   for (let i = 0; i < brandState.length; i++) {
     data1.push({

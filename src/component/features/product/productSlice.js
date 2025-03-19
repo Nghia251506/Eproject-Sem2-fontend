@@ -7,8 +7,9 @@ const initialState = {
   product: { // Thay vì chỉ có mảng `products`, bạn cần chứa thông tin sản phẩm riêng biệt
     name: '',
     description: '',
-    price: '',
-    quantity: '',
+    sell_price: '',
+    capital_price: '',
+    stock: '',
     category_id: '',
     brand_id: '',
     image_url: ''
