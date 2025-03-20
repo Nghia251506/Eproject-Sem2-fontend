@@ -51,12 +51,12 @@ export const detailSlice = createSlice({
            .addCase(createDetail.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isSuccess = true;
-                state.message = action.payload.message;
+                // state.message = action.payload.message;
             })
            .addCase(createDetail.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
-                state.message = action.payload;
+                // state.message = action.payload;
             })
            .addCase(getDetailByProductId.pending, (state) => {
                 state.isLoading = true;

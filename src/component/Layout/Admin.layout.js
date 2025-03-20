@@ -56,31 +56,35 @@ const Admin = ({children}) => {
             {
               key: '',
               icon: <AiFillDashboard className="fs-4"/>,
-              label: 'Dashboard',
+              label: 'Tổng quan',
             },
             {
               key: '',
               icon: <UserOutlined className="fs-4"/>,
-              label: 'User',
+              label: 'Người dùng',
               children:[
                 {
                   key: "customers",
                   icon: <FontAwesomeIcon icon={faUsers} className="fs-4"/>,
-                  label: 'Custommer',
+                  label: 'Khách hàng',
                 },
                 {
                   key: "employees",
                   icon: <UserOutlined className="fs-4"/>,
-                  label: 'Employee',
+                  label: 'Nhân viên',
                 },
-                
+                {
+                  key: "supplier",
+                  icon: <UserOutlined className="fs-4"/>,
+                  label: 'Nhà cung cấp',
+                },
               ]
             },
             
             {
               key: 'catalog',
               icon: <FaListAlt className="fs-4"/>,
-              label: 'Overview',
+              label: 'Danh mục',
               children:[
                 {
                   key: 'list-product',
@@ -122,7 +126,7 @@ const Admin = ({children}) => {
             {
               key: 'bill',
               icon: <FaMoneyBillTransfer className="fs-4"/>,
-              label: 'Bill',
+              label: 'Hoá đơn',
               children:[
                 {
                     key:'list-bill',

@@ -21,8 +21,9 @@ const AddProduct = () => {
     code: "",
     name: "",
     description: "",
-    price: "",
-    quantity: "",
+    sell_price: "",
+    capital_price: "",
+    stock: "",
     category_id: "",
     brand_id: "",
     image_url: "",
@@ -50,8 +51,9 @@ const AddProduct = () => {
         code: productData.code || "",
         name: productData.name || "",
         description: productData.description || "",
-        price: productData.price || "",
-        quantity: productData.quantity || "",
+        sell_price: productData.sell_price || "",
+        capital_price: productData.capital_price || "",
+        stock: productData.stock || "",
         category_id: productData.category_id || "",
         brand_id: productData.brand_id || "",
         image_url: productData.image_url || "",
@@ -79,7 +81,7 @@ const AddProduct = () => {
     e.preventDefault();
   
     // Kiểm tra nếu giá trị quan trọng nào đó bị thiếu
-    if (!formValues.name || !formValues.price || !formValues.quantity) {
+    if (!formValues.name || !formValues.sell_price || !formValues.stock) {
       toast.error("Vui lòng điền đầy đủ thông tin.");
       return;
     }
@@ -131,12 +133,21 @@ const AddProduct = () => {
           onChg={handleInputChange}
           className="form-control py-3 mb-3"
         />
-        <span>Giá sản phẩm</span>
+        <span>Giá bán sản phẩm</span>
         <CustomInput
           type="number"
           placeholder="Nhập giá sản phẩm"
-          name="price"
-          value={formValues.price}
+          name="sell_price"
+          value={formValues.sell_price}
+          onChg={handleInputChange}
+          className="form-control py-3 mb-3"
+        />
+        <span>Giá nhập sản phẩm</span>
+        <CustomInput
+          type="number"
+          placeholder="Nhập giá sản phẩm"
+          name="capital_price"
+          value={formValues.capital_price}
           onChg={handleInputChange}
           className="form-control py-3 mb-3"
         />
@@ -144,8 +155,8 @@ const AddProduct = () => {
         <CustomInput
           type="number"
           placeholder="Nhập số lượng sản phẩm"
-          name="quantity"
-          value={formValues.quantity}
+          name="stock"
+          value={formValues.stock}
           onChg={handleInputChange}
           className="form-control py-3 mb-3"
         />
