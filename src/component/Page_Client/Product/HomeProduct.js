@@ -6,11 +6,13 @@ import _home from '../../Asset/css/_home.module.css';
 import { GoChevronRight } from "react-icons/go";
 import { LuShoppingBasket } from "react-icons/lu";
 import {Link} from 'react-router-dom'
+import { useCart } from "../cart/CartContext";
 
 const HomeProduct = () => {
     const dispatch = useDispatch();
     const productState = useSelector((state) => state.product.products) || [];
     const categoryState = useSelector((state) => state.category.categories) || [];
+    const addToCart = useCart();
 
     // Trạng thái hiển thị số lượng sản phẩm cho từng danh mục
     const [visibleProducts, setVisibleProducts] = useState({});
@@ -87,6 +89,7 @@ const HomeProduct = () => {
                                     </p>
                                     <button
                                     className={_home.home_button_add_to_card}
+                                    onClick={() => addToCart(product)}
                                     >
                                     <LuShoppingBasket className="fs-5" />  &nbsp;
                                         Thêm vào giỏ hàng

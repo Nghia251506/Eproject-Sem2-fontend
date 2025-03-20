@@ -1,5 +1,6 @@
 import axios from 'axios'
 
+//const API_URL = "http://tncom.ddns.net:3389";
 const API_URL = "http://localhost:3389";
 
 const CreateProductDetail = async (detailData) => {

@@ -22,7 +22,7 @@ function Header(){
                                 <LuShoppingBasket style={{color: "white", fontSize:"1.25rem"}}/>
                             </div>
                             <div>
-                                <span style={{color: "white"}}> Giỏ hàng</span>
+                                <a href='/cart-product'><span style={{color: "white"}}> Giỏ hàng</span></a>
                             </div>
                         </div>
                     </div>
