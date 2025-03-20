@@ -83,7 +83,7 @@ const HomeProduct = () => {
                                     />
                                     <Link to={`/${product.name}/${product.id}`}><span>{truncateText(product.name, 40)}</span></Link>
                                     <p className={_home.product_items_price}>
-                                        {product.price.toLocaleString("vi-VN")}₫
+                                        {product.sell_price.toLocaleString("vi-VN")}₫
                                     </p>
                                     <button
                                     className={_home.home_button_add_to_card}
