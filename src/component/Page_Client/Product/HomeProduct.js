@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { ListCategories, resetStateCategory } from '../../features/Category/categorySlice';
 import { getProducts, resetState } from "../../features/product/productSlice";
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,13 +6,13 @@ import _home from '../../Asset/css/_home.module.css';
 import { GoChevronRight } from "react-icons/go";
 import { LuShoppingBasket } from "react-icons/lu";
 import {Link} from 'react-router-dom'
-import { useCart } from "../cart/CartContext";
+import { CartContext  } from "../cart/CartContext";
 
 const HomeProduct = () => {
     const dispatch = useDispatch();
     const productState = useSelector((state) => state.product.products) || [];
     const categoryState = useSelector((state) => state.category.categories) || [];
-    const addToCart = useCart();
+    const {addProduct} = useContext(CartContext);
 
     // Trạng thái hiển thị số lượng sản phẩm cho từng danh mục
     const [visibleProducts, setVisibleProducts] = useState({});
@@ -83,13 +83,13 @@ const HomeProduct = () => {
                                         alt=""
                                         className={_home.product_items_img}
                                     />
-                                    <Link to={`/${product.name}/${product.id}`}><span>{truncateText(product.name, 40)}</span></Link>
+                                    <Link to={`/product/${product.id}`}><span>{truncateText(product.name, 40)}</span></Link>
                                     <p className={_home.product_items_price}>
                                         {product.sell_price.toLocaleString("vi-VN")}₫
                                     </p>
                                     <button
                                     className={_home.home_button_add_to_card}
-                                    onClick={() => addToCart(product)}
+                                    onClick={() => addProduct(product)}
                                     >
                                     <LuShoppingBasket className="fs-5" />  &nbsp;
                                         Thêm vào giỏ hàng

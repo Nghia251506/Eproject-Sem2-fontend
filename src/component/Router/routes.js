@@ -26,7 +26,7 @@ const routes = [
         layout: LayoutClient,
         children: [
             {path:"/", component: Home},
-            {path:"/:name/:id", component: ProductDetail},
+            {path:"/product/:id", component: ProductDetail},
             {path:"/:category_name", component: ListProductByCategory},
             {path:"/cart-product", component: CartProduct},
             {path:"/payment", component: Payment}

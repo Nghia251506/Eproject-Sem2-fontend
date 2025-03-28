@@ -1,30 +1,22 @@
-import { createContext, useState, useContext } from "react";
+// CartContext.js
+import React, { createContext, useState } from "react";
 
-// Tạo Context
-const CartContext = createContext();
-
-// Hook để sử dụng giỏ hàng dễ dàng hơn
-export const useCart = () => useContext(CartContext);
+export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-  const [cart, setCart] = useState([]);
+  const [cartState, setCartState] = useState({
+    products: [],
+  });
 
-  // Hàm thêm sản phẩm vào giỏ hàng
-  const addToCart = (product) => {
-    setCart((prevCart) => {
-      const existingProduct = prevCart.find((item) => item.id === product.id);
-      if (existingProduct) {
-        return prevCart.map((item) =>
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-        );
-      } else {
-        return [...prevCart, { ...product, quantity: 1 }];
-      }
-    });
+  const addProduct = (product) => {
+    setCartState((prevState) => ({
+      products: [...prevState.products, product],
+    }));
+    console.log('products: ' + JSON.stringify(cartState))
   };
 
   return (
-    <CartContext.Provider value={{ cart, addToCart }}>
+    <CartContext.Provider value={{ cartState, addProduct }}>
       {children}
     </CartContext.Provider>
   );

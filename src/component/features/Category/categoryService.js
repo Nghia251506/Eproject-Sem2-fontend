@@ -1,7 +1,7 @@
 import axios from "axios";
 
 //const API_URL = "http://tncom.ddns.net:3389";
-const API_URL = "http://localhost:3389"; // Thay đổi URL nếu backend của bạn dùng địa chỉ khác
+const API_URL = "http://localhost:4000"; // Thay đổi URL nếu backend của bạn dùng địa chỉ khác
 
 // Lấy danh sách sản phẩm
 const ListCategories = async () => {

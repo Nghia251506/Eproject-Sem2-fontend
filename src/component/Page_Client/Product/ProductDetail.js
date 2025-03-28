@@ -6,15 +6,18 @@ import { Link, useLocation } from 'react-router-dom';
 import { resetState, ClientProductDetail } from '../../features/product/productSlice';
 
 const ProductDetail = () => {
-    const dispatch = useDispatch();
-    const productState = useSelector((state) => state.product) || {};
+    const productState = useSelector((state) => state.product.products[0]) || {};
     const location = useLocation();
     const getProductId = location.pathname.split("/")[3];
-    console.log("Product:",productState);
+    
+    const dispatch = useDispatch();
     useEffect(() => {
         dispatch(resetState());
         dispatch(ClientProductDetail(getProductId));
     }, [dispatch, getProductId]);
+    
+    console.log("Product:", JSON.stringify(productState));
+    console.log("image:", productState.image_url);
 
     // Kiểm tra nếu chưa có dữ liệu sản phẩm
     if (!productState) {

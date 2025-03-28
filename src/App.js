@@ -3,10 +3,11 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { routes } from './component/Router/routes';
 import {Outlet} from 'react-router-dom'
 import React from 'react';
+import { CartProvider } from "./component/Page_Client/cart/CartContext";
 
 function App() {
   return (
-    <>
+    <CartProvider>
       <Router>
       <Routes>
         {routes.map((item, index) => {
@@ -40,7 +41,7 @@ function App() {
         })}
       </Routes>
       </Router>
-    </>
+    </CartProvider>
   );
 }
 

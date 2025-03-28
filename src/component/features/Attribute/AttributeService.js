@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_URL = 'http://localhost:3389';
+const API_URL = 'http://localhost:4000';
 
 // lấy danh sách thuộc tính
 const getAttributes = async () => {

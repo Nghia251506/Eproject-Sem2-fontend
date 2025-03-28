@@ -2,8 +2,8 @@ import _home from '../../Asset/css/_home.module.css';
 import _header from '../../Asset/css/_header.module.css';
 import _footer from '../../Asset/css/_footer.module.css';
 import _container from '../../Asset/css/_container.module.css'
-import React, { useState } from 'react';
-import { useCart } from "./CartContext";
+import React, { useState, useContext } from 'react';
+import { CartContext } from "./CartContext";
 
 const CartProduct = () => {
     
@@ -13,8 +13,8 @@ const CartProduct = () => {
     //     { id: 3, name: 'Sản phẩm 3',quanity: 3, price: 300, src:'https://hanoicomputercdn.com/media/product/87738_84781_vo_case_xigmatek_fly_ii_3gf_en44663_atx_mid_tower_mau_den_3_fan_vo_cuc__2_.jpg' },
     //   ]);
     
-    const cart  = useCart() || [];
-
+    const { cartState } = useContext(CartContext);
+    console.log('cart: ' + JSON.stringify(cartState))
     const removeFromCart = (id) => {
         // setCart(cart.filter(item => item.id !== id)); // Xóa sản phẩm có id tương ứng
     };
@@ -24,10 +24,12 @@ const CartProduct = () => {
             <div className={_container.container}>
                 <h3 >Danh sách sản phẩm</h3>
             </div>
-            
-            <div style={{ width: '100%', height: '100%', marginBottom: '20px'}}>
+            {cartState.products.length === 0 ? (
+                <div><p>Giỏ hàng trống</p></div>
+            ) : (
+                <div style={{ width: '100%', height: '100%', marginBottom: '20px'}}>
                 <div className={_container.container}>
-                    {cart.map((item) => (
+                    {cartState.products.map((item) => (
                         <div className={_footer.footer_container} style={{ marginBottom: '20px', border: '1px solid #090635', borderRadius: '15px'}}>
                             <div className={_header.logo_container}>
                                 <img className={_header.logo} src={item.src} alt=''/>
@@ -47,13 +49,15 @@ const CartProduct = () => {
                         </div>
                     ))}
                     <div>
-                        <h4>Tổng tiền: {cart.reduce((total, item) => total + (item.price * item.quanity), 0)} VNĐ</h4>
+                        <h4>Tổng tiền: {cartState.products.reduce((total, item) => total + (item.price * item.quanity), 0)} VNĐ</h4>
                     </div>
                     <div>
                         <a href='/payment' className={_footer.footer_payment_button}>Thanh toán</a>
                     </div>
                 </div>
             </div>
+            )}
+            
         </div>
     );
 };
